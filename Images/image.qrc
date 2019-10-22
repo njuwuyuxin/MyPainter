@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/">
+        <file>circle.png</file>
+        <file>curve.png</file>
+        <file>ellipse.png</file>
+        <file>image.qrc</file>
+        <file>line.png</file>
+        <file>polygon.png</file>
+        <file>clear.png</file>
+        <file>delete.png</file>
+        <file>Larger.png</file>
+        <file>smaller.png</file>
+        <file>paint.png</file>
+        <file>Caijian.png</file>
+        <file>SelectColor.png</file>
+    </qresource>
+</RCC>

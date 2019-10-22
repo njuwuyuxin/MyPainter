@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Images/Caijian.png</file>
+        <file>Images/circle.png</file>
+        <file>Images/clear.png</file>
+        <file>Images/curve.png</file>
+        <file>Images/delete.png</file>
+        <file>Images/ellipse.png</file>
+        <file>Images/image.qrc</file>
+        <file>Images/Larger.png</file>
+        <file>Images/line.png</file>
+        <file>Images/myPaint2D.ico</file>
+        <file>Images/myPaint2D.png</file>
+        <file>Images/paint.png</file>
+        <file>Images/polygon.png</file>
+        <file>Images/SelectColor.png</file>
+        <file>Images/smaller.png</file>
+    </qresource>
+</RCC>
