@@ -14,9 +14,137 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget"/>
-  <widget class="QMenuBar" name="menubar"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>文件</string>
+    </property>
+    <addaction name="actionLoad"/>
+    <addaction name="actionSave"/>
+   </widget>
+   <addaction name="menu"/>
+  </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="MainToolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionSelectColor"/>
+   <addaction name="actionDrawLine"/>
+   <addaction name="actionDrawPolygon"/>
+   <addaction name="actionDrawCircle"/>
+   <addaction name="actionDrawOval"/>
+   <addaction name="actionDrawCurve"/>
+   <addaction name="actionResetPix"/>
+  </widget>
+  <action name="actionLoad">
+   <property name="text">
+    <string>Load</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="text">
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionSelectColor">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/SelectColor.png</normaloff>:/Images/SelectColor.png</iconset>
+   </property>
+   <property name="text">
+    <string>SelectColor</string>
+   </property>
+   <property name="toolTip">
+    <string>选择颜色</string>
+   </property>
+  </action>
+  <action name="actionDrawLine">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/line.png</normaloff>:/Images/line.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawLine</string>
+   </property>
+  </action>
+  <action name="actionDrawCircle">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/circle.png</normaloff>:/Images/circle.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawCircle</string>
+   </property>
+   <property name="toolTip">
+    <string>画圆</string>
+   </property>
+  </action>
+  <action name="actionDrawOval">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/ellipse.png</normaloff>:/Images/ellipse.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawOval</string>
+   </property>
+   <property name="toolTip">
+    <string>画椭圆</string>
+   </property>
+  </action>
+  <action name="actionDrawPolygon">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/polygon.png</normaloff>:/Images/polygon.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawPolygon</string>
+   </property>
+   <property name="toolTip">
+    <string>画多边形</string>
+   </property>
+  </action>
+  <action name="actionDrawCurve">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/curve.png</normaloff>:/Images/curve.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawCurve</string>
+   </property>
+   <property name="toolTip">
+    <string>画曲线</string>
+   </property>
+  </action>
+  <action name="actionResetPix">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/clear.png</normaloff>:/Images/clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>ResetPix</string>
+   </property>
+   <property name="toolTip">
+    <string>重置画布</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Image.qrc"/>
+ </resources>
  <connections/>
 </ui>
