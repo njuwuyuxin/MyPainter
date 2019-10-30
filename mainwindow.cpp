@@ -1,16 +1,49 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "figure.h"
+#include "line.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    QPainter painter(this);
+    resize(800,600);
+    pixMap=QPixmap(800,600);
+    pixMap.fill(Qt::white);
+    QPainter pp(&pixMap);
+    Line testLine;
+    QPoint start(0,0);
+    QPoint end(100,100);
+    testLine.DrawUseBresenham(pp,start,end);
+
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::paintEvent(QPaintEvent *)
+{
+    QPainter painter(this);
+    painter.drawPixmap(0,56,pixMap);
+}
+
+void MainWindow::mousePressEvent(QMouseEvent *)
+{
+
+}
+
+void MainWindow::mouseMoveEvent(QMouseEvent *)
+{
+
+}
+
+void MainWindow::mouseReleaseEvent(QMouseEvent *)
+{
+
 }
 
 void MainWindow::on_actionSelectColor_triggered()

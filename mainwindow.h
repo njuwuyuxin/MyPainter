@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QPainter>
+#include <QMouseEvent>
+#include <QPushButton>
 #include <iostream>
 using namespace std;
 
@@ -17,8 +20,16 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+protected:
+    void paintEvent(QPaintEvent* );
+    void mousePressEvent(QMouseEvent* );
+    void mouseMoveEvent(QMouseEvent* );
+    void mouseReleaseEvent(QMouseEvent* );
+
 private:
     Ui::MainWindow *ui;
+    QPixmap pixMap;
+    QImage imageMap;
 
 private slots:
     void on_actionSelectColor_triggered();
