@@ -8,10 +8,18 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    //初始化画布
     QPainter painter(this);
     resize(800,600);
     pixMap=QPixmap(800,600);
     pixMap.fill(Qt::white);
+
+    //初始化各项绘制状态
+    isDrawing=false;
+    CurrentFigureMode=DrawLine;
+
+    //测试画线功能
     QPainter pp(&pixMap);
     Line testLine;
     QPoint start(0,0);
@@ -28,56 +36,81 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    painter.drawPixmap(0,56,pixMap);
+//    painter.drawPixmap(0,56,pixMap);
+    painter.drawPixmap(0,0,pixMap);  //无偏移量
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *)
+void MainWindow::mousePressEvent(QMouseEvent *event)
 {
+    if(event->buttons()==Qt::LeftButton){
+        isDrawing=true;
+        startPoint=event->pos();
+        endPoint=event->pos();
+        update();
+    }
+
 
 }
 
-void MainWindow::mouseMoveEvent(QMouseEvent *)
+void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    if(event->buttons()==Qt::LeftButton&&isDrawing){
+        endPoint=event->pos();
+        update();
+    }
 
 }
 
-void MainWindow::mouseReleaseEvent(QMouseEvent *)
+void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    isDrawing=false;
+    endPoint=event->pos();
+    Line tempLine;
+    QPainter pp(&pixMap);
+    tempLine.DrawUseBresenham(pp,startPoint,endPoint);
+    update();
 
 }
 
 void MainWindow::on_actionSelectColor_triggered()
 {
-    cout<<"press select_color!"<<endl;
+
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawLine_triggered()
 {
-    cout<<"press draw_line!"<<endl;
+    CurrentFigureMode=DrawLine;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawPolygon_triggered()
 {
-    cout<<"press draw_polygon!"<<endl;
+    CurrentFigureMode=DrawPolygon;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawCircle_triggered()
 {
-    cout<<"press draw_circle!"<<endl;
+    CurrentFigureMode=DrawCircle;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawOval_triggered()
 {
-    cout<<"press draw_oval!"<<endl;
+    CurrentFigureMode=DrawOval;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawCurve_triggered()
 {
-    cout<<"press draw_curve!"<<endl;
+    CurrentFigureMode=DrawCurve;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionResetPix_triggered()
 {
-    cout<<"press reset_pix"<<endl;
+    CurrentFigureMode=Clear;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
