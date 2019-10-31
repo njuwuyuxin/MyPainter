@@ -124,7 +124,7 @@ void MainWindow::DrawFromInstruction(QString path)
             update();
             continue;
         }
-        if(instrList.at(0)=="reset")
+        if(instrList.at(0)=="resetCanvas")
         {
             resetPixMap(instrList[1].toInt(),instrList[1].toInt());
         }
