@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     resize(800,600);
     pixMap=QPixmap(800,600);
     pixMap.fill(Qt::white);
+    prePixMap=pixMap;
 
     //初始化各项绘制状态
     isDrawing=false;
@@ -56,20 +57,38 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if(event->buttons()==Qt::LeftButton&&isDrawing){
         endPoint=event->pos();
+        Line tempLine;
+        pixMap=prePixMap;
+        QPainter pp(&pixMap);
+        tempLine.DrawUseBresenham(pp,startPoint,endPoint);
         update();
     }
-
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     isDrawing=false;
     endPoint=event->pos();
-    Line tempLine;
+    Line tempLine(1,startPoint,endPoint);
     QPainter pp(&pixMap);
-    tempLine.DrawUseBresenham(pp,startPoint,endPoint);
+    tempLine.DrawUseBresenham(pp);
+    prePixMap=pixMap;
     update();
+}
 
+void MainWindow::on_actionLoad_triggered()
+{
+    QString file_path = QFileDialog::getOpenFileName(this, "请选择读取文件", "./");
+    qDebug()<<file_path;
+    if(file_path.isEmpty())
+    {
+        return;
+    }
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    return;
 }
 
 void MainWindow::on_actionSelectColor_triggered()

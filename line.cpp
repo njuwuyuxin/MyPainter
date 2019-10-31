@@ -2,7 +2,16 @@
 
 Line::Line()
 {
+    id=-1;
+    QPoint NullPoint(0,0);
+    startPoint=endPoint=NullPoint;
+}
 
+Line::Line(int line_id,QPoint s, QPoint e)
+{
+    id=line_id;
+    startPoint = s;
+    endPoint = e;
 }
 
 void Line::DrawFigure()
@@ -65,4 +74,9 @@ void Line::DrawUseBresenham(QPainter &pp, QPoint &begin, QPoint &end)
             }
         }
     }
+}
+
+void Line::DrawUseBresenham(QPainter &pp)
+{
+    DrawUseBresenham(pp,startPoint,endPoint);
 }

@@ -12,10 +12,17 @@
 
 class Line : public Figure
 {
+private:
+    QPoint startPoint;
+    QPoint endPoint;
+    int id;
+
 public:
     Line();
+    Line(int line_id,QPoint s,QPoint e);
     void DrawFigure();
     void DrawUseBresenham(QPainter& pp,QPoint& begin,QPoint& end);
+    void DrawUseBresenham(QPainter& pp);
 };
 
 #endif // LINE_H
