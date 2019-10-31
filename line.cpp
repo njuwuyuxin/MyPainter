@@ -16,7 +16,6 @@ Line::Line(int line_id,QPoint s, QPoint e)
 
 void Line::DrawFigure()
 {
-
 }
 
 void Line::DrawUseBresenham(QPainter &pp, QPoint &begin, QPoint &end)
