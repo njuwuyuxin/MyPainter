@@ -9,10 +9,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     //初始化画布
     QPainter painter(this);
-    resize(800,600);
-    tempPixMap=QPixmap(800,600);
-    tempPixMap.fill(Qt::white);
-    pixMap=tempPixMap;
+    windowWidth=800;
+    windowHeight=600;
+    resetPixMap(windowWidth,windowHeight);
 
     //初始化各项绘制状态
     isDrawing=false;
@@ -22,6 +21,17 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::resetPixMap(int width, int height)
+{
+    windowWidth=width;
+    windowHeight=height;
+    resize(width,height);
+    QPixmap newPixMap(width,height);
+    newPixMap.fill(Qt::white);
+    pixMap=newPixMap;
+    tempPixMap=pixMap;
 }
 
 void MainWindow::paintEvent(QPaintEvent *)
@@ -89,7 +99,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 }
 /*----------------鼠标事件处理函数---------------------*/
 
-//从文件中读取指令并绘图
+/*-------------从文件中读取指令并绘图-------------------*/
 void MainWindow::DrawFromInstruction(QString path)
 {
     QFile file(path);
@@ -116,7 +126,7 @@ void MainWindow::DrawFromInstruction(QString path)
         }
         if(instrList.at(0)=="reset")
         {
-
+            resetPixMap(instrList[1].toInt(),instrList[1].toInt());
         }
         else
         {
@@ -181,6 +191,8 @@ void MainWindow::on_actionDrawCurve_triggered()
 void MainWindow::on_actionResetPix_triggered()
 {
     CurrentFigureMode=Clear;
+    resetPixMap(windowWidth,windowHeight);
+    update();
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 

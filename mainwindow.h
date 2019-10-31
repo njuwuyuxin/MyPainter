@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void resetPixMap(int width,int height);
 
 protected:
     void paintEvent(QPaintEvent* );
@@ -36,6 +37,9 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+    int windowWidth;
+    int windowHeight;
+
 
     QPixmap tempPixMap;               //临时画布，一些预览性质的内容会暂时画在临时画布上，确定绘制完成时会转移到pixMap上
     QPixmap pixMap;                   //全局变量画布
