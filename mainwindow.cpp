@@ -100,7 +100,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 /*----------------鼠标事件处理函数---------------------*/
 
 /*-------------从文件中读取指令并绘图-------------------*/
-void MainWindow::DrawFromInstruction(QString path)
+void MainWindow::DrawFromInstruction(QString path,QString dir_path)
 {
     QFile file(path);
     file.open(QIODevice::ReadOnly|QIODevice::Text);
@@ -124,7 +124,15 @@ void MainWindow::DrawFromInstruction(QString path)
             update();
             continue;
         }
-        if(instrList.at(0)=="resetCanvas")
+        else if(instrList.at(0)=="saveCanvas"){
+//            QString save_path = dir_path + instrList.at(1);
+            QString save_path = instrList.at(1);
+            save_path = QDir::toNativeSeparators(save_path);
+            qDebug()<<save_path<<endl;
+            SavePixMap(save_path);
+            continue;
+        }
+        else if(instrList.at(0)=="resetCanvas")
         {
             resetPixMap(instrList[1].toInt(),instrList[1].toInt());
         }
@@ -136,6 +144,11 @@ void MainWindow::DrawFromInstruction(QString path)
     }
 }
 
+void MainWindow::SavePixMap(QString file_name)
+{
+    pixMap.save(file_name,"BMP",-1);
+}
+
 void MainWindow::on_actionLoad_triggered()
 {
     QString file_path = QFileDialog::getOpenFileName(this, "请选择读取文件", "./");
@@ -144,7 +157,7 @@ void MainWindow::on_actionLoad_triggered()
     {
         return;
     }
-    DrawFromInstruction(file_path);
+//    DrawFromInstruction(file_path);
 }
 
 void MainWindow::on_actionSave_triggered()

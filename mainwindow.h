@@ -28,12 +28,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void resetPixMap(int width,int height);
+    void DrawFromInstruction(QString path,QString dir_path);
+    void SavePixMap(QString file_name);
 
 protected:
     void paintEvent(QPaintEvent* );
     void mousePressEvent(QMouseEvent* );
     void mouseMoveEvent(QMouseEvent* );
     void mouseReleaseEvent(QMouseEvent* );
+
 
 private:
     Ui::MainWindow *ui;
@@ -50,7 +53,7 @@ private:
 
     FigureMode CurrentFigureMode;     //表示当前按钮点击了某个图形图标，接下来会绘制该图形
 
-    void DrawFromInstruction(QString path);
+
 
 private slots:
     void on_actionLoad_triggered();
