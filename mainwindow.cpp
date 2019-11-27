@@ -58,19 +58,25 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         endPoint=event->pos();
         if(CurrentFigureMode==DrawLine)
         {
-            Line tempLine;
             tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
             QPainter pp(&tempPixMap);
-            tempLine.DrawUseBresenham(pp,startPoint,endPoint);
+            Line::DrawUseBresenham(pp,startPoint,endPoint);
             update();
             return;
         }
         if(CurrentFigureMode==DrawCircle)
         {
-            Circle tempCircle;
             tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
             QPainter pp(&tempPixMap);
-            tempCircle.DrawUseMidCircle(pp,startPoint,endPoint);
+            Circle::DrawUseMidCircle(pp,startPoint,endPoint);
+            update();
+            return;
+        }
+        if(CurrentFigureMode==DrawOval)
+        {
+            tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
+            QPainter pp(&tempPixMap);
+            Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
             update();
             return;
         }
@@ -85,13 +91,15 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     QPainter pp(&tempPixMap);
     if(CurrentFigureMode==DrawLine)
     {
-        Line tempLine;
-        tempLine.DrawUseBresenham(pp,startPoint,endPoint);
+        Line::DrawUseBresenham(pp,startPoint,endPoint);
     }
     if(CurrentFigureMode==DrawCircle)
     {
-        Circle tempCircle;
-        tempCircle.DrawUseMidCircle(pp,startPoint,endPoint);
+        Circle::DrawUseMidCircle(pp,startPoint,endPoint);
+    }
+    if(CurrentFigureMode==DrawOval)
+    {
+        Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
     }
 
     pixMap=tempPixMap;       //鼠标松开时，认为该次绘制已完成，保存到pixMap中

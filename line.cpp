@@ -14,7 +14,7 @@ Line::Line(int line_id,QPoint s, QPoint e)
     endPoint = e;
 }
 
-void Line::DrawFigure()
+void Line::DrawFigure(QPainter& pp)
 {
 }
 

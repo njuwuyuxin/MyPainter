@@ -12,6 +12,7 @@
 #include "figure.h"
 #include "line.h"
 #include "circle.h"
+#include "ellipse.h"
 using namespace std;
 
 QT_BEGIN_NAMESPACE

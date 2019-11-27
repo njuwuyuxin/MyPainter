@@ -17,6 +17,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     circle.cpp \
+    ellipse.cpp \
     figure.cpp \
     line.cpp \
     main.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     circle.h \
+    ellipse.h \
     figure.h \
     line.h \
     mainwindow.h

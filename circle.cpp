@@ -14,9 +14,9 @@ Circle::Circle(QPoint s, QPoint e)
     radius=CalculateDistance(s,e);
 }
 
-void Circle::DrawFigure()
+void Circle::DrawFigure(QPainter& pp)
 {
-
+    DrawUseMidCircle(pp,CenterPoint,radius);
 }
 
 void Circle::DrawUseMidCircle(QPainter& pp, QPoint center, QPoint edge)
