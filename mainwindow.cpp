@@ -172,6 +172,19 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             update();
             continue;
         }
+        else if(instrList.at(0)=="drawEllipse")
+        {
+            int centerX = instrList[2].toInt();
+            int centerY = instrList[3].toInt();
+            int Rx = instrList[4].toInt();
+            int Ry = instrList[5].toInt();
+            Ellipse oneEllipse(centerX,centerY,Rx,Ry);
+            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
+            oneEllipse.DrawFigure(pp);
+            tempPixMap=pixMap;
+            update();
+            continue;
+        }
         else if(instrList.at(0)=="saveCanvas"){
 //            QString save_path = dir_path + instrList.at(1);
             QString save_path = instrList.at(1);

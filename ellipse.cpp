@@ -5,6 +5,14 @@ Ellipse::Ellipse()
 
 }
 
+Ellipse::Ellipse(int cx, int cy, int rx, int ry)
+{
+    centerX = cx;
+    centerY = cy;
+    Rx=rx;
+    Ry=ry;
+}
+
 void Ellipse::DrawFigure(QPainter &pp)
 {
     DrawUseMidOval(pp,centerX,centerY,Rx,Ry);
