@@ -16,6 +16,18 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化各项绘制状态
     isDrawing=false;
     CurrentFigureMode=DrawLine;
+
+//    QPainter pp(&tempPixMap);
+//    Polygon poly;
+//    QPoint p1(123,123);
+//    QPoint p2(544,344);
+//    QPoint p3(753,325);
+//    QPoint p4(153,465);
+//    poly.AddVertex(p1);
+//    poly.AddVertex(p2);
+//    poly.AddVertex(p3);
+//    poly.AddVertex(p4);
+//    poly.DrawFigure(pp);
 }
 
 MainWindow::~MainWindow()
@@ -45,10 +57,30 @@ void MainWindow::paintEvent(QPaintEvent *)
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
     if(event->buttons()==Qt::LeftButton){
-        isDrawing=true;
-        startPoint=event->pos();
-        endPoint=event->pos();
-        update();
+        if(CurrentFigureMode==DrawPolygon)
+        {
+            isDrawing=true;
+            if(PolygonVertex.size()==0){
+                QPoint s = event->pos();
+                PolygonVertex.push_back(s);
+            }
+        }
+        else
+        {
+            isDrawing=true;
+            startPoint=event->pos();
+            endPoint=event->pos();
+            update();
+        }
+    }
+    else if(event->buttons()==Qt::RightButton){
+        if(CurrentFigureMode==DrawPolygon){      //点击鼠标右键意味着一个多边形已画完，需自动补齐最后一条边
+            QPainter pp(&tempPixMap);
+            Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],PolygonVertex[0]);
+            pixMap = tempPixMap;
+            PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
+        }
+
     }
 }
 
@@ -80,6 +112,16 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             update();
             return;
         }
+        if(CurrentFigureMode==DrawPolygon)
+        {
+            if(PolygonVertex.size()>0){
+                tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
+                QPainter pp(&tempPixMap);
+                QPoint tempPoint = event->pos();
+                Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],tempPoint);
+            }
+            update();
+        }
     }
 }
 
@@ -100,6 +142,13 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     if(CurrentFigureMode==DrawOval)
     {
         Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
+    }
+    if(CurrentFigureMode==DrawPolygon)
+    {
+        if(PolygonVertex.size()!=0){        //如果顶点集为空，证明之前点击了右键，一个多边形已完成，顶点集被清空
+            PolygonVertex.push_back(event->pos());
+            Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-2],PolygonVertex[PolygonVertex.size()-1]);
+        }
     }
 
     pixMap=tempPixMap;       //鼠标松开时，认为该次绘制已完成，保存到pixMap中

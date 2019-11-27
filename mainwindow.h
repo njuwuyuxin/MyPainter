@@ -13,6 +13,7 @@
 #include "line.h"
 #include "circle.h"
 #include "ellipse.h"
+#include "polygon.h"
 using namespace std;
 
 QT_BEGIN_NAMESPACE
@@ -51,6 +52,7 @@ private:
     QPoint startPoint;                //鼠标起始坐标
     QPoint endPoint;                  //鼠标最终坐标
     QImage imageMap;
+    vector<QPoint> PolygonVertex;     //用于记录当前所画多边形顶点集，每次画新的多边形是会首先清空内部元素
 
     FigureMode CurrentFigureMode;     //表示当前按钮点击了某个图形图标，接下来会绘制该图形
 

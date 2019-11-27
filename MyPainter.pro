@@ -21,14 +21,16 @@ SOURCES += \
     figure.cpp \
     line.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    polygon.cpp
 
 HEADERS += \
     circle.h \
     ellipse.h \
     figure.h \
     line.h \
-    mainwindow.h
+    mainwindow.h \
+    polygon.h
 
 FORMS += \
     mainwindow.ui
