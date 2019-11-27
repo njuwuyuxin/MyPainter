@@ -75,6 +75,60 @@ void Line::DrawUseBresenham(QPainter &pp, QPoint &begin, QPoint &end)
     }
 }
 
+void Line::DrawUseDDA(QPainter &pp, QPoint &begin, QPoint &end)
+{
+    int x1,y1,x2,y2,dx,dy;
+    int sign;
+    if(begin.x()<end.x()){
+        x1=begin.x();
+        y1=begin.y();
+        x2=end.x();
+        y2=end.y();
+    }
+    else{
+        x1=end.x();
+        y1=end.y();
+        x2=begin.x();
+        y2=begin.y();
+    }
+    //保证从左到右生成线段
+    dx=abs(x2-x1);
+    dy=abs(y2-y1);
+    if(dx>dy){          //斜率的绝对值小于1，以x作为递增基准
+        double k = dy*1.0/dx;
+        sign=y2>y1?1:-1;
+        int x=x1;
+        double y=y1;
+        for(;x<=x2;x++)
+        {
+            y+=k*sign;
+            pp.drawPoint(x,(int)y);
+        }
+    }
+    if(dx<dy){          //斜率的绝对值大于1，以y作为递增基准
+        sign=y2>y1?1:-1;
+        double k = dx*1.0/dy;       //实际上是斜率的倒数
+        if(sign==1){     //正斜率
+            int y=y1;
+            double x=x1;
+            for(;y<=y2;y++)
+            {
+                x+=k;
+                pp.drawPoint((int)x,y);
+            }
+        }
+        else{
+            int y=y1;
+            double x=x1;
+            for(;y>=y2;y--)
+            {
+                x+=k;
+                pp.drawPoint((int)x,y);
+            }
+        }
+    }
+}
+
 void Line::DrawUseBresenham(QPainter &pp)
 {
     DrawUseBresenham(pp,startPoint,endPoint);

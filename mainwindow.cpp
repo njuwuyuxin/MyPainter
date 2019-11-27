@@ -17,17 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     isDrawing=false;
     CurrentFigureMode=DrawLine;
 
-//    QPainter pp(&tempPixMap);
-//    Polygon poly;
-//    QPoint p1(123,123);
-//    QPoint p2(544,344);
-//    QPoint p3(753,325);
-//    QPoint p4(153,465);
-//    poly.AddVertex(p1);
-//    poly.AddVertex(p2);
-//    poly.AddVertex(p3);
-//    poly.AddVertex(p4);
-//    poly.DrawFigure(pp);
 }
 
 MainWindow::~MainWindow()
@@ -93,6 +82,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
             tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
             QPainter pp(&tempPixMap);
             Line::DrawUseBresenham(pp,startPoint,endPoint);
+//            Line::DrawUseDDA(pp,startPoint,endPoint);
             update();
             return;
         }
@@ -134,6 +124,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     if(CurrentFigureMode==DrawLine)
     {
         Line::DrawUseBresenham(pp,startPoint,endPoint);
+//        Line::DrawUseDDA(pp,startPoint,endPoint);
     }
     if(CurrentFigureMode==DrawCircle)
     {
