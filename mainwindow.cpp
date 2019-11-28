@@ -17,6 +17,22 @@ MainWindow::MainWindow(QWidget *parent)
     isDrawing=false;
     CurrentFigureMode=DrawLine;
 
+//    QPainter pp(&tempPixMap);
+//    Curve cur;
+//    QPoint p1(332,132);
+//    QPoint p2(542,326);
+//    QPoint p3(487,124);
+//    QPoint p4(132,398);
+//    QPoint p5(684,254);
+//    QPoint p6(586,234);
+//    cur.AddControlPoint(p1);
+//    cur.AddControlPoint(p2);
+//    cur.AddControlPoint(p3);
+//    cur.AddControlPoint(p4);
+//    cur.AddControlPoint(p5);
+//    cur.AddControlPoint(p6);
+//    cur.DrawFigureUseBezier(pp);
+//    update();
 }
 
 MainWindow::~MainWindow()
@@ -54,6 +70,11 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 PolygonVertex.push_back(s);
             }
         }
+        else if(CurrentFigureMode==DrawCurve){
+            isDrawing=true;
+            QPoint s = event->pos();
+            CurveControlPoint.push_back(s);
+        }
         else
         {
             isDrawing=true;
@@ -68,6 +89,13 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],PolygonVertex[0]);
             pixMap = tempPixMap;
             PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
+        }
+        else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
+             QPainter pp(&tempPixMap);
+             Curve oneCurve(CurveControlPoint);
+             oneCurve.DrawFigure(pp);
+             pixMap = tempPixMap;
+             CurveControlPoint.clear();
         }
 
     }

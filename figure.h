@@ -9,6 +9,7 @@
 #include<math.h>
 #include<vector>
 #include<iostream>
+#include <QDebug>
 using namespace std;
 
 class Figure
