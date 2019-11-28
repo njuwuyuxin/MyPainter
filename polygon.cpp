@@ -5,6 +5,11 @@ Polygon::Polygon()
 
 }
 
+Polygon::Polygon(int ID)
+{
+    id = ID;
+}
+
 void Polygon::AddVertex(QPoint p)
 {
     Vertex.push_back(p);

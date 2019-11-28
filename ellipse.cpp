@@ -5,8 +5,9 @@ Ellipse::Ellipse()
 
 }
 
-Ellipse::Ellipse(int cx, int cy, int rx, int ry)
+Ellipse::Ellipse(int ID,int cx, int cy, int rx, int ry)
 {
+    id = ID;
     centerX = cx;
     centerY = cy;
     Rx=rx;

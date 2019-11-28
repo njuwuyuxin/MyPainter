@@ -15,7 +15,6 @@ class Line : public Figure
 private:
     QPoint startPoint;
     QPoint endPoint;
-    int id;
 
 public:
     Line();

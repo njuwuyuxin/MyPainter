@@ -180,7 +180,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             int vertex_count = instrList[2].toInt();
             QString instr2 = inputStream.readLine();
             QStringList vertexes = instr2.split(" ");
-            Polygon onePoly;
+            Polygon onePoly(id);
             for(int i=0;i<vertex_count;i++){
                 QPoint p(vertexes[i].toInt(),vertexes[i+1].toInt());
                 onePoly.AddVertex(p);
@@ -198,11 +198,12 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
         }
         else if(instrList.at(0)=="drawEllipse")
         {
+            int id = instrList[1].toInt();
             int centerX = instrList[2].toInt();
             int centerY = instrList[3].toInt();
             int Rx = instrList[4].toInt();
             int Ry = instrList[5].toInt();
-            Ellipse oneEllipse(centerX,centerY,Rx,Ry);
+            Ellipse oneEllipse(id,centerX,centerY,Rx,Ry);
             QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
             oneEllipse.DrawFigure(pp);
             tempPixMap=pixMap;
