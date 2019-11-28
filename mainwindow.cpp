@@ -16,23 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化各项绘制状态
     isDrawing=false;
     CurrentFigureMode=DrawLine;
-
-//    QPainter pp(&tempPixMap);
-//    Curve cur;
-//    QPoint p1(332,132);
-//    QPoint p2(542,326);
-//    QPoint p3(487,124);
-//    QPoint p4(132,398);
-//    QPoint p5(684,254);
-//    QPoint p6(586,234);
-//    cur.AddControlPoint(p1);
-//    cur.AddControlPoint(p2);
-//    cur.AddControlPoint(p3);
-//    cur.AddControlPoint(p4);
-//    cur.AddControlPoint(p5);
-//    cur.AddControlPoint(p6);
-//    cur.DrawFigureUseBezier(pp);
-//    update();
 }
 
 MainWindow::~MainWindow()
@@ -234,6 +217,28 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             Ellipse oneEllipse(id,centerX,centerY,Rx,Ry);
             QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
             oneEllipse.DrawFigure(pp);
+            tempPixMap=pixMap;
+            update();
+            continue;
+        }
+        else if(instrList.at(0)=="drawCurve")
+        {
+            int id = instrList[1].toInt();
+            int point_count = instrList[2].toInt();
+            QString instr2 = inputStream.readLine();
+            QStringList points = instr2.split(" ");
+            Curve oneCurve(id);
+            for(int i=0;i<point_count;i++){
+                QPoint p(points[i].toInt(),points[i+1].toInt());
+                oneCurve.AddControlPoint(p);
+            }
+            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
+            if(instrList[3]=="Bezier"){
+                oneCurve.DrawFigureUseBezier(pp);
+            }
+            else if(instrList[3]=="B-Spline"){
+                oneCurve.DrawFigureUseBSpline(pp);
+            }
             tempPixMap=pixMap;
             update();
             continue;

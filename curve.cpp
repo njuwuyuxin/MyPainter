@@ -19,6 +19,11 @@ Curve::Curve()
 
 }
 
+Curve::Curve(int ID)
+{
+    id = ID;
+}
+
 Curve::Curve(const vector<QPoint> &points)
 {
     for(size_t i=0;i<points.size();i++){
@@ -54,4 +59,9 @@ void Curve::DrawFigureUseBezier(QPainter &pp)
         QPoint temp((int)(posX+0.5),(int)(posY+0.5));
         pp.drawPoint(temp);
     }
+}
+
+void Curve::DrawFigureUseBSpline(QPainter &pp)
+{
+    DrawFigureUseBezier(pp);
 }
