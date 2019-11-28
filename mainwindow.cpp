@@ -156,6 +156,31 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     pixMap=tempPixMap;       //鼠标松开时，认为该次绘制已完成，保存到pixMap中
     update();
 }
+
+void MainWindow::DrawAllFigures()
+{
+    resetPixMap(windowWidth,windowHeight);
+    QPainter pp(&pixMap);
+    for(size_t i=0;i<Figures.size();i++){
+        switch(Algorithms[i]){
+        case Default:
+            Figures[i]->DrawFigure(pp);
+            break;
+        case Bresenham:
+            Figures[i]->DrawUseBresenham(pp);
+            break;
+        case DDA:
+            Figures[i]->DrawUseDDA(pp);
+            break;
+        case Bezier:
+            Figures[i]->DrawUseBezier(pp);
+            break;
+        case BSpline:
+            Figures[i]->DrawUseBSpline(pp);
+            break;
+        }
+    }
+}
 /*----------------鼠标事件处理函数---------------------*/
 
 /*-------------从文件中读取指令并绘图-------------------*/
@@ -174,14 +199,14 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
         {
             QPoint start(instrList[2].toInt(),instrList[3].toInt());
             QPoint end(instrList[4].toInt(),instrList[5].toInt());
-            Line oneLine(instrList[1].toInt(),start,end);
-            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
+            Line* oneLine = new Line(instrList[1].toInt(),start,end);
+            Algorithm a;
             if(instrList[6]=="Bresenham")
-                oneLine.DrawUseBresenham(pp);
+                a=Bresenham;
             else if(instrList[6]=="DDA")
-                oneLine.DrawUseDDA(pp);
-
-            tempPixMap=pixMap;
+                a=DDA;
+            Figures.push_back(oneLine);
+            Algorithms.push_back(a);
             update();
             continue;
         }
@@ -191,19 +216,18 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             int vertex_count = instrList[2].toInt();
             QString instr2 = inputStream.readLine();
             QStringList vertexes = instr2.split(" ");
-            Polygon onePoly(id);
+            Polygon* onePoly = new Polygon(id);
             for(int i=0;i<vertex_count;i++){
                 QPoint p(vertexes[i].toInt(),vertexes[i+1].toInt());
-                onePoly.AddVertex(p);
+                onePoly->AddVertex(p);
             }
-            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
-            if(instrList[3]=="Bresenham"){
-                onePoly.DrawUseBresenham(pp);
-            }
-            else if(instrList[3]=="DDA"){
-                onePoly.DrawUseDDA(pp);
-            }
-            tempPixMap=pixMap;
+            Algorithm a;
+            if(instrList[3]=="Bresenham")
+                a=Bresenham;
+            else if(instrList[3]=="DDA")
+                a=DDA;
+            Figures.push_back(onePoly);
+            Algorithms.push_back(a);
             update();
             continue;
         }
@@ -214,10 +238,10 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             int centerY = instrList[3].toInt();
             int Rx = instrList[4].toInt();
             int Ry = instrList[5].toInt();
-            Ellipse oneEllipse(id,centerX,centerY,Rx,Ry);
-            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
-            oneEllipse.DrawFigure(pp);
-            tempPixMap=pixMap;
+            Ellipse* oneEllipse = new Ellipse(id,centerX,centerY,Rx,Ry);
+            Algorithm a = Default;
+            Figures.push_back(oneEllipse);
+            Algorithms.push_back(a);
             update();
             continue;
         }
@@ -227,33 +251,40 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             int point_count = instrList[2].toInt();
             QString instr2 = inputStream.readLine();
             QStringList points = instr2.split(" ");
-            Curve oneCurve(id);
+            Curve* oneCurve = new Curve(id);
             for(int i=0;i<point_count;i++){
                 QPoint p(points[i].toInt(),points[i+1].toInt());
-                oneCurve.AddControlPoint(p);
+                oneCurve->AddControlPoint(p);
             }
-            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
-            if(instrList[3]=="Bezier"){
-                oneCurve.DrawUseBezier(pp);
-            }
-            else if(instrList[3]=="B-Spline"){
-                oneCurve.DrawUseBSpline(pp);
-            }
-            tempPixMap=pixMap;
+
+            Algorithm a;
+            if(instrList[3]=="Bezier")
+                a=Bezier;
+            else if(instrList[3]=="B-Spline")
+                a=BSpline;
+            Figures.push_back(oneCurve);
+            Algorithms.push_back(a);
             update();
             continue;
         }
         else if(instrList.at(0)=="saveCanvas"){
 //            QString save_path = dir_path + instrList.at(1);
+
+            //由于命令行程序需要存储所有图元，并且涉及到图元的编辑，因此只有在保存之前，才会将存储图元统一绘制到一张画布上
+            //并且每次绘制之前需要先清空上一张画布内容，根据存储的图元集合重新绘制
+            DrawAllFigures();
             QString save_path = instrList.at(1);
             save_path = QDir::toNativeSeparators(save_path);
             qDebug()<<save_path<<endl;
             SavePixMap(save_path);
+            update();
             continue;
         }
         else if(instrList.at(0)=="resetCanvas")
         {
             resetPixMap(instrList[1].toInt(),instrList[1].toInt());
+            Figures.clear();
+            Algorithms.clear();
         }
         else
         {

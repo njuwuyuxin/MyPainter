@@ -22,6 +22,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 enum FigureMode{DrawLine,DrawCircle,DrawOval,DrawPolygon,DrawCurve,Clear};
+enum Algorithm{Default,Bresenham,DDA,Bezier,BSpline};
 
 class MainWindow : public QMainWindow
 {
@@ -30,9 +31,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void resetPixMap(int width,int height);
     void DrawFromInstruction(QString path,QString dir_path);
-    void SavePixMap(QString file_name);
 
 protected:
     void paintEvent(QPaintEvent* );
@@ -40,12 +39,10 @@ protected:
     void mouseMoveEvent(QMouseEvent* );
     void mouseReleaseEvent(QMouseEvent* );
 
-
 private:
     Ui::MainWindow *ui;
     int windowWidth;
     int windowHeight;
-
 
     QPixmap tempPixMap;               //临时画布，一些预览性质的内容会暂时画在临时画布上，确定绘制完成时会转移到pixMap上
     QPixmap pixMap;                   //全局变量画布
@@ -55,6 +52,14 @@ private:
     QImage imageMap;
     vector<QPoint> PolygonVertex;     //用于记录当前所画多边形顶点集，每次画新的多边形时会首先清空内部元素
     vector<QPoint> CurveControlPoint; //用于记录绘制曲线的控制点集，每次画新的曲线时会首先清空内部元素
+
+    vector<Figure*> Figures;          //存储的图元集（仅命令行程序使用）
+    vector<Algorithm> Algorithms;     //存储的图元对应的绘制算法，与图元集一一对应
+
+    void resetPixMap(int width,int height);
+
+    void SavePixMap(QString file_name);
+    void DrawAllFigures();
 
     FigureMode CurrentFigureMode;     //表示当前按钮点击了某个图形图标，接下来会绘制该图形
 
