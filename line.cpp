@@ -133,3 +133,8 @@ void Line::DrawUseBresenham(QPainter &pp)
 {
     DrawUseBresenham(pp,startPoint,endPoint);
 }
+
+void Line::DrawUseDDA(QPainter &pp)
+{
+    DrawUseDDA(pp,startPoint,endPoint);
+}

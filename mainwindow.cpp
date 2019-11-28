@@ -167,7 +167,31 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
             if(instrList[6]=="Bresenham")
                 oneLine.DrawUseBresenham(pp);
+            else if(instrList[6]=="DDA")
+                oneLine.DrawUseDDA(pp);
 
+            tempPixMap=pixMap;
+            update();
+            continue;
+        }
+        if(instrList.at(0)=="drawPolygon")
+        {
+            int id = instrList[1].toInt();
+            int vertex_count = instrList[2].toInt();
+            QString instr2 = inputStream.readLine();
+            QStringList vertexes = instr2.split(" ");
+            Polygon onePoly;
+            for(int i=0;i<vertex_count;i++){
+                QPoint p(vertexes[i].toInt(),vertexes[i+1].toInt());
+                onePoly.AddVertex(p);
+            }
+            QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
+            if(instrList[3]=="Bresenham"){
+                onePoly.DrawFigureUseBresenham(pp);
+            }
+            else if(instrList[3]=="DDA"){
+                onePoly.DrawFigureUseDDA(pp);
+            }
             tempPixMap=pixMap;
             update();
             continue;
