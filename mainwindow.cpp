@@ -13,6 +13,9 @@ MainWindow::MainWindow(QWidget *parent)
     windowHeight=600;
     resetPixMap(windowWidth,windowHeight);
 
+    //初始化画笔
+    PenColor = Qt::black;
+
     //初始化各项绘制状态
     isDrawing=false;
     CurrentFigureMode=DrawLine;
@@ -36,9 +39,9 @@ void MainWindow::resetPixMap(int width, int height)
 
 void MainWindow::paintEvent(QPaintEvent *)
 {
-    QPainter painter(this);
+    QPainter qpainter(this);
 //    painter.drawPixmap(0,56,tempPixMap);
-    painter.drawPixmap(0,0,tempPixMap);  //无偏移量
+    qpainter.drawPixmap(0,0,tempPixMap);  //无偏移量
 }
 
 /*----------------鼠标事件处理函数---------------------*/
@@ -67,14 +70,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
         }
     }
     else if(event->buttons()==Qt::RightButton){
+        QPainter pp(&tempPixMap);
+        pp.setPen(PenColor);
         if(CurrentFigureMode==DrawPolygon){      //点击鼠标右键意味着一个多边形已画完，需自动补齐最后一条边
-            QPainter pp(&tempPixMap);
             Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],PolygonVertex[0]);
             pixMap = tempPixMap;
             PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
         }
         else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
-             QPainter pp(&tempPixMap);
              Curve oneCurve(CurveControlPoint);
              oneCurve.DrawFigure(pp);
              pixMap = tempPixMap;
@@ -88,10 +91,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
     if(event->buttons()==Qt::LeftButton&&isDrawing){
         endPoint=event->pos();
+        tempPixMap=pixMap;//每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
+        QPainter pp(&tempPixMap);
+        pp.setPen(PenColor);
         if(CurrentFigureMode==DrawLine)
         {
-            tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
-            QPainter pp(&tempPixMap);
             Line::DrawUseBresenham(pp,startPoint,endPoint);
 //            Line::DrawUseDDA(pp,startPoint,endPoint);
             update();
@@ -99,16 +103,12 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         }
         if(CurrentFigureMode==DrawCircle)
         {
-            tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
-            QPainter pp(&tempPixMap);
             Circle::DrawUseMidCircle(pp,startPoint,endPoint);
             update();
             return;
         }
         if(CurrentFigureMode==DrawOval)
         {
-            tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
-            QPainter pp(&tempPixMap);
             Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
             update();
             return;
@@ -116,8 +116,6 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
         if(CurrentFigureMode==DrawPolygon)
         {
             if(PolygonVertex.size()>0){
-                tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
-                QPainter pp(&tempPixMap);
                 QPoint tempPoint = event->pos();
                 Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],tempPoint);
             }
@@ -132,6 +130,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     endPoint=event->pos();
     tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
     QPainter pp(&tempPixMap);
+    pp.setPen(PenColor);
     if(CurrentFigureMode==DrawLine)
     {
         Line::DrawUseBresenham(pp,startPoint,endPoint);
@@ -161,6 +160,7 @@ void MainWindow::DrawAllFigures()
 {
     resetPixMap(windowWidth,windowHeight);
     QPainter pp(&pixMap);
+    pp.setPen(PenColor);
     for(size_t i=0;i<Figures.size();i++){
         switch(Algorithms[i]){
         case Default:
@@ -267,6 +267,13 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             update();
             continue;
         }
+        else if(instrList.at(0)=="setColor"){
+            int R = instrList[1].toInt();
+            int G = instrList[2].toInt();
+            int B = instrList[3].toInt();
+            QColor c(R,G,B);
+            PenColor=c;
+        }
         else if(instrList.at(0)=="saveCanvas"){
 //            QString save_path = dir_path + instrList.at(1);
 
@@ -317,7 +324,8 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSelectColor_triggered()
 {
-
+    PenColor=QColorDialog::getColor(Qt::black,this);
+    qDebug()<<PenColor<<endl;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 

@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <iostream>
 #include <QFileDialog>
+#include <QColorDialog>
 #include <QDebug>
 
 #include "figure.h"
@@ -46,6 +47,7 @@ private:
 
     QPixmap tempPixMap;               //临时画布，一些预览性质的内容会暂时画在临时画布上，确定绘制完成时会转移到pixMap上
     QPixmap pixMap;                   //全局变量画布
+    QColor PenColor;                  //当前画笔颜色
     bool isDrawing;                   //是否正在绘制（鼠标按下到抬起的过程）
     QPoint startPoint;                //鼠标起始坐标
     QPoint endPoint;                  //鼠标最终坐标
