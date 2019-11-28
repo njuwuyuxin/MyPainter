@@ -198,10 +198,10 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             }
             QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
             if(instrList[3]=="Bresenham"){
-                onePoly.DrawFigureUseBresenham(pp);
+                onePoly.DrawUseBresenham(pp);
             }
             else if(instrList[3]=="DDA"){
-                onePoly.DrawFigureUseDDA(pp);
+                onePoly.DrawUseDDA(pp);
             }
             tempPixMap=pixMap;
             update();
@@ -234,10 +234,10 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             }
             QPainter pp(&pixMap); //不涉及鼠标事件，直接在pixMap上绘制即可
             if(instrList[3]=="Bezier"){
-                oneCurve.DrawFigureUseBezier(pp);
+                oneCurve.DrawUseBezier(pp);
             }
             else if(instrList[3]=="B-Spline"){
-                oneCurve.DrawFigureUseBSpline(pp);
+                oneCurve.DrawUseBSpline(pp);
             }
             tempPixMap=pixMap;
             update();

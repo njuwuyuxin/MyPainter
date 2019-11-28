@@ -38,10 +38,10 @@ void Curve::AddControlPoint(QPoint p)
 
 void Curve::DrawFigure(QPainter &pp)
 {
-    DrawFigureUseBezier(pp);
+    DrawUseBezier(pp);
 }
 
-void Curve::DrawFigureUseBezier(QPainter &pp)
+void Curve::DrawUseBezier(QPainter &pp)
 {
     for(double u=0;u<=1;u+=0.001){
         vector<double> coefficients;        //用来存储生成曲线的Bezier公式的各项系数，系数个数=控制点=阶数+1
@@ -61,7 +61,7 @@ void Curve::DrawFigureUseBezier(QPainter &pp)
     }
 }
 
-void Curve::DrawFigureUseBSpline(QPainter &pp)
+void Curve::DrawUseBSpline(QPainter &pp)
 {
-    DrawFigureUseBezier(pp);
+    DrawUseBezier(pp);
 }

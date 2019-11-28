@@ -12,8 +12,8 @@ public:
     Curve(const vector<QPoint> &points);
     void AddControlPoint(QPoint p);
     void DrawFigure(QPainter &pp);
-    void DrawFigureUseBezier(QPainter &pp);
-    void DrawFigureUseBSpline(QPainter &pp);
+    void DrawUseBezier(QPainter &pp);
+    void DrawUseBSpline(QPainter &pp);
 };
 
 #endif // CURVE_H

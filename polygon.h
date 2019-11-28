@@ -12,8 +12,8 @@ public:
     Polygon(int ID);
     void AddVertex(QPoint p);
     void DrawFigure(QPainter &pp);
-    void DrawFigureUseDDA(QPainter &pp);
-    void DrawFigureUseBresenham(QPainter &pp);
+    void DrawUseDDA(QPainter &pp);
+    void DrawUseBresenham(QPainter &pp);
 };
 
 #endif // POLYGON_H

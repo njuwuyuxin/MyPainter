@@ -17,10 +17,10 @@ void Polygon::AddVertex(QPoint p)
 
 void Polygon::DrawFigure(QPainter &pp)
 {
-    DrawFigureUseBresenham(pp);
+    DrawUseBresenham(pp);
 }
 
-void Polygon::DrawFigureUseDDA(QPainter &pp)
+void Polygon::DrawUseDDA(QPainter &pp)
 {
     for(size_t i=1;i<Vertex.size();i++){
         Line::DrawUseDDA(pp,Vertex[i-1],Vertex[i]);
@@ -28,7 +28,7 @@ void Polygon::DrawFigureUseDDA(QPainter &pp)
     Line::DrawUseDDA(pp,Vertex[Vertex.size()-1],Vertex[0]);   //进行封闭
 }
 
-void Polygon::DrawFigureUseBresenham(QPainter &pp)
+void Polygon::DrawUseBresenham(QPainter &pp)
 {
     for(size_t i=1;i<Vertex.size();i++){
         Line::DrawUseBresenham(pp,Vertex[i-1],Vertex[i]);
