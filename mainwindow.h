@@ -57,6 +57,7 @@ private:
 
     vector<Figure*> Figures;          //存储的图元集（仅命令行程序使用）
     vector<Algorithm> Algorithms;     //存储的图元对应的绘制算法，与图元集一一对应
+    vector<QColor> Colors;            //存储每个图元对应的颜色，与图元集一一对应
 
     void resetPixMap(int width,int height);
 

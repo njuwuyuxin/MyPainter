@@ -160,8 +160,8 @@ void MainWindow::DrawAllFigures()
 {
     resetPixMap(windowWidth,windowHeight);
     QPainter pp(&pixMap);
-    pp.setPen(PenColor);
     for(size_t i=0;i<Figures.size();i++){
+        pp.setPen(Colors[i]);               //根据每个图元的颜色分别设置画笔
         switch(Algorithms[i]){
         case Default:
             Figures[i]->DrawFigure(pp);
@@ -207,6 +207,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
                 a=DDA;
             Figures.push_back(oneLine);
             Algorithms.push_back(a);
+            Colors.push_back(PenColor);
             update();
             continue;
         }
@@ -228,6 +229,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
                 a=DDA;
             Figures.push_back(onePoly);
             Algorithms.push_back(a);
+            Colors.push_back(PenColor);
             update();
             continue;
         }
@@ -242,6 +244,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             Algorithm a = Default;
             Figures.push_back(oneEllipse);
             Algorithms.push_back(a);
+            Colors.push_back(PenColor);
             update();
             continue;
         }
@@ -264,6 +267,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
                 a=BSpline;
             Figures.push_back(oneCurve);
             Algorithms.push_back(a);
+            Colors.push_back(PenColor);
             update();
             continue;
         }
@@ -292,6 +296,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             resetPixMap(instrList[1].toInt(),instrList[1].toInt());
             Figures.clear();
             Algorithms.clear();
+            Colors.clear();
         }
         else
         {
