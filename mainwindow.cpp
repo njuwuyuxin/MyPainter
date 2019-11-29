@@ -193,7 +193,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
     {
         QString instruction = inputStream.readLine();
         QStringList instrList = instruction.split(" ");
-        if(instruction[0]=='/'&&instruction[1]=='/'){
+        if(instruction.size()>=2&&instruction[0]=='/'&&instruction[1]=='/'){
             qDebug()<<"这是一行注释:"<<instruction<<endl;
             continue;
         }
