@@ -138,3 +138,11 @@ void Line::DrawUseDDA(QPainter &pp)
 {
     DrawUseDDA(pp,startPoint,endPoint);
 }
+
+void Line::Move(int x, int y)
+{
+    QPoint newPoint1(startPoint.x()+x,startPoint.y()+y);
+    QPoint newPoint2(endPoint.x()+x,endPoint.y()+y);
+    startPoint = newPoint1;
+    endPoint = newPoint2;
+}

@@ -35,3 +35,11 @@ void Polygon::DrawUseBresenham(QPainter &pp)
     }
     Line::DrawUseBresenham(pp,Vertex[Vertex.size()-1],Vertex[0]);   //进行封闭
 }
+
+void Polygon::Move(int x, int y)
+{
+    for(size_t i=0;i<Vertex.size();i++){
+        QPoint newPoint(Vertex[i].x()+x,Vertex[i].y()+y);
+        Vertex[i]=newPoint;
+    }
+}

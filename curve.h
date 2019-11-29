@@ -14,6 +14,8 @@ public:
     void DrawFigure(QPainter &pp);
     void DrawUseBezier(QPainter &pp);
     void DrawUseBSpline(QPainter &pp);
+
+    void Move(int x, int y);
 };
 
 #endif // CURVE_H

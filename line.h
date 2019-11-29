@@ -24,6 +24,8 @@ public:
     static void DrawUseDDA(QPainter& pp,QPoint& begin,QPoint& end);
     void DrawUseBresenham(QPainter& pp);
     void DrawUseDDA(QPainter& pp);
+
+    void Move(int x, int y);
 };
 
 #endif // LINE_H

@@ -65,3 +65,11 @@ void Curve::DrawUseBSpline(QPainter &pp)
 {
     DrawUseBezier(pp);
 }
+
+void Curve::Move(int x, int y)
+{
+    for(size_t i=0;i<ControlPoints.size();i++){
+        QPoint newPoint(ControlPoints[i].x()+x,ControlPoints[i].y()+y);
+        ControlPoints[i]=newPoint;
+    }
+}

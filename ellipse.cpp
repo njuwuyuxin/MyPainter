@@ -8,15 +8,15 @@ Ellipse::Ellipse()
 Ellipse::Ellipse(int ID,int cx, int cy, int rx, int ry)
 {
     id = ID;
-    centerX = cx;
-    centerY = cy;
+    QPoint center(cx,cy);
+    centerPoint = center;
     Rx=rx;
     Ry=ry;
 }
 
 void Ellipse::DrawFigure(QPainter &pp)
 {
-    DrawUseMidOval(pp,centerX,centerY,Rx,Ry);
+    DrawUseMidOval(pp,centerPoint.x(),centerPoint.y(),Rx,Ry);
 }
 
 void Ellipse::DrawUseMidOval(QPainter &pp, QPoint &begin, QPoint &end)
@@ -77,4 +77,10 @@ void Ellipse::DrawUseMidOval(QPainter &pp, int centerX, int centerY, int Rx, int
         pp.drawPoint(centerX-x,centerY+y);
         pp.drawPoint(centerX-x,centerY-y);
     }
+}
+
+void Ellipse::Move(int x, int y)
+{
+    QPoint newPoint(centerPoint.x()+x,centerPoint.y()+y);
+    centerPoint = newPoint;
 }

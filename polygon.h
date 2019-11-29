@@ -14,6 +14,8 @@ public:
     void DrawFigure(QPainter &pp);
     void DrawUseDDA(QPainter &pp);
     void DrawUseBresenham(QPainter &pp);
+
+    void Move(int x, int y);
 };
 
 #endif // POLYGON_H

@@ -68,3 +68,9 @@ void Circle::DrawLeftPart(QPainter &pp, int x, int y, QPoint &center)
     pp.drawPoint(center.x()-y,center.y()+x);
     pp.drawPoint(center.x()-x,center.y()+y);
 }
+
+void Circle::Move(int x, int y)
+{
+    QPoint newPoint(CenterPoint.x()+x,CenterPoint.y()+y);
+    CenterPoint=newPoint;
+}

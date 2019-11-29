@@ -193,8 +193,11 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
     {
         QString instruction = inputStream.readLine();
         QStringList instrList = instruction.split(" ");
+        if(instruction[0]=='/'&&instruction[1]=='/'){
+            qDebug()<<"这是一行注释:"<<instruction<<endl;
+            continue;
+        }
         qDebug()<<instrList;
-
         if(instrList.at(0)=="drawLine")
         {
             QPoint start(instrList[2].toInt(),instrList[3].toInt());
@@ -268,6 +271,19 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             Figures.push_back(oneCurve);
             Algorithms.push_back(a);
             Colors.push_back(PenColor);
+            update();
+            continue;
+        }
+        else if(instrList.at(0)=="translate"){
+            int id = instrList[1].toInt();
+            int dx = instrList[2].toInt();
+            int dy = instrList[3].toInt();
+            for(size_t i=0;i<Figures.size();i++){
+                if(Figures[i]->id==id){
+                    Figures[i]->Move(dx,dy);
+                    break;
+                }
+            }
             update();
             continue;
         }
