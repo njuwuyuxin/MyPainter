@@ -295,13 +295,11 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             PenColor=c;
         }
         else if(instrList.at(0)=="saveCanvas"){
-//            QString save_path = dir_path + instrList.at(1);
+            QString save_path = dir_path + instrList.at(1);
 
             //由于命令行程序需要存储所有图元，并且涉及到图元的编辑，因此只有在保存之前，才会将存储图元统一绘制到一张画布上
             //并且每次绘制之前需要先清空上一张画布内容，根据存储的图元集合重新绘制
             DrawAllFigures();
-            QString save_path = instrList.at(1);
-            save_path = QDir::toNativeSeparators(save_path);
             qDebug()<<save_path<<endl;
             SavePixMap(save_path);
             update();
