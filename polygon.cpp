@@ -20,6 +20,13 @@ void Polygon::DrawFigure(QPainter &pp)
     DrawUseBresenham(pp);
 }
 
+void Polygon::RotateFigure(QPoint RotateCenter, int angle)
+{
+    for(size_t i=0;i<Vertex.size();i++){
+        Figure::RotatePoint(Vertex[i],RotateCenter,angle);
+    }
+}
+
 void Polygon::DrawUseDDA(QPainter &pp)
 {
     for(size_t i=1;i<Vertex.size();i++){

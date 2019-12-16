@@ -41,6 +41,13 @@ void Curve::DrawFigure(QPainter &pp)
     DrawUseBezier(pp);
 }
 
+void Curve::RotateFigure(QPoint RotateCenter, int angle)
+{
+    for(size_t i=0;i<ControlPoints.size();i++){
+        Figure::RotatePoint(ControlPoints[i],RotateCenter,angle);
+    }
+}
+
 void Curve::DrawUseBezier(QPainter &pp)
 {
     for(double u=0;u<=1;u+=0.001){

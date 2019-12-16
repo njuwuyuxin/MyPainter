@@ -12,6 +12,7 @@ public:
     Circle();
     Circle(QPoint s,QPoint e);
     void DrawFigure(QPainter& pp);
+    void RotateFigure(QPoint RotateCenter, int angle);
     static void DrawUseMidCircle(QPainter& pp,QPoint center,QPoint edge);          //已知两点坐标（适用于鼠标拖动）
     static void DrawUseMidCircle(QPainter& pp,QPoint center,int R);                //已知圆心和半径（适合通用画圆）
     static void DrawLeftPart(QPainter& pp,int x,int y,QPoint &center);              //画出其余剩余对称的部分

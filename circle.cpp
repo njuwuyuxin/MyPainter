@@ -19,6 +19,11 @@ void Circle::DrawFigure(QPainter& pp)
     DrawUseMidCircle(pp,CenterPoint,radius);
 }
 
+void Circle::RotateFigure(QPoint RotateCenter, int angle)
+{
+
+}
+
 void Circle::DrawUseMidCircle(QPainter& pp, QPoint center, QPoint edge)
 {
     int R=CalculateDistance(center,edge);

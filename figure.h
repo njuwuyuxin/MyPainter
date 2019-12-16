@@ -22,8 +22,11 @@ public:
     virtual void DrawUseBezier(QPainter& pp);
     virtual void DrawUseBSpline(QPainter& pp);
 
+    virtual void RotateFigure(QPoint RotateCenter, int angle) = 0;      //图元绕旋转中心旋转angle角度
+
     virtual void Move(int x,int y)=0;                  //平移图元
     static int CalculateDistance(QPoint a,QPoint b);   //计算两点间距离，由于返回像素个数因此返回int
+    static void RotatePoint(QPoint& StartPoint, QPoint RotateCenter,int angle);       //将某一点绕旋转中心旋转angle角度
 };
 
 #endif // FIGURE_H

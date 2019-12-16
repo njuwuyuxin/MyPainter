@@ -12,6 +12,7 @@ public:
     Curve(const vector<QPoint> &points);
     void AddControlPoint(QPoint p);
     void DrawFigure(QPainter &pp);
+    void RotateFigure(QPoint RotateCenter, int angle);
     void DrawUseBezier(QPainter &pp);
     void DrawUseBSpline(QPainter &pp);
 

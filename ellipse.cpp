@@ -19,6 +19,11 @@ void Ellipse::DrawFigure(QPainter &pp)
     DrawUseMidOval(pp,centerPoint.x(),centerPoint.y(),Rx,Ry);
 }
 
+void Ellipse::RotateFigure(QPoint RotateCenter, int angle)
+{
+
+}
+
 void Ellipse::DrawUseMidOval(QPainter &pp, QPoint &begin, QPoint &end)
 {
     int x0,y0,x1,y1,centerX,centerY;

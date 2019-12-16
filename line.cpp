@@ -18,6 +18,12 @@ void Line::DrawFigure(QPainter& pp)
 {
 }
 
+void Line::RotateFigure(QPoint RotateCenter, int angle)
+{
+    Figure::RotatePoint(startPoint,RotateCenter,angle);
+    Figure::RotatePoint(endPoint,RotateCenter,angle);
+}
+
 void Line::DrawUseBresenham(QPainter &pp, QPoint &begin, QPoint &end)
 {
     int x1,y1,x2,y2,dx,dy;
