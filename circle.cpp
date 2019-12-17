@@ -24,6 +24,12 @@ void Circle::RotateFigure(QPoint RotateCenter, int angle)
 
 }
 
+void Circle::ScaleFigure(QPoint ScaleCenter, float mutiple)
+{
+    Figure::ScalePoint(CenterPoint,ScaleCenter,mutiple);
+    radius = (int)(radius*mutiple);
+}
+
 void Circle::DrawUseMidCircle(QPainter& pp, QPoint center, QPoint edge)
 {
     int R=CalculateDistance(center,edge);

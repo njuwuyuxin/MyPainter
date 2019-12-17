@@ -48,6 +48,13 @@ void Curve::RotateFigure(QPoint RotateCenter, int angle)
     }
 }
 
+void Curve::ScaleFigure(QPoint ScaleCenter, float mutiple)
+{
+    for(size_t i=0;i<ControlPoints.size();i++){
+        Figure::ScalePoint(ControlPoints[i],ScaleCenter,mutiple);
+    }
+}
+
 void Curve::DrawUseBezier(QPainter &pp)
 {
     for(double u=0;u<=1;u+=0.001){

@@ -27,6 +27,13 @@ void Polygon::RotateFigure(QPoint RotateCenter, int angle)
     }
 }
 
+void Polygon::ScaleFigure(QPoint ScaleCenter, float mutiple)
+{
+    for(size_t i=0;i<Vertex.size();i++){
+        Figure::ScalePoint(Vertex[i],ScaleCenter,mutiple);
+    }
+}
+
 void Polygon::DrawUseDDA(QPainter &pp)
 {
     for(size_t i=1;i<Vertex.size();i++){

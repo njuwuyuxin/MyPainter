@@ -24,6 +24,13 @@ void Ellipse::RotateFigure(QPoint RotateCenter, int angle)
 
 }
 
+void Ellipse::ScaleFigure(QPoint ScaleCenter, float mutiple)
+{
+    Figure::ScalePoint(centerPoint,ScaleCenter,mutiple);
+    Rx=(int)(Rx*mutiple);
+    Ry=(int)(Ry*mutiple);
+}
+
 void Ellipse::DrawUseMidOval(QPainter &pp, QPoint &begin, QPoint &end)
 {
     int x0,y0,x1,y1,centerX,centerY;

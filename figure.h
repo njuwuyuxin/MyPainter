@@ -23,10 +23,12 @@ public:
     virtual void DrawUseBSpline(QPainter& pp);
 
     virtual void RotateFigure(QPoint RotateCenter, int angle) = 0;      //图元绕旋转中心旋转angle角度
+    virtual void ScaleFigure(QPoint ScaleCenter,float mutiple) = 0;     //图元以缩放中心，缩放mutiple倍
 
     virtual void Move(int x,int y)=0;                  //平移图元
     static int CalculateDistance(QPoint a,QPoint b);   //计算两点间距离，由于返回像素个数因此返回int
     static void RotatePoint(QPoint& StartPoint, QPoint RotateCenter,int angle);       //将某一点绕旋转中心旋转angle角度
+    static void ScalePoint(QPoint& StartPoint,QPoint ScaleCenter,float s);            //将某一点以缩放中心缩放s倍
 };
 
 #endif // FIGURE_H

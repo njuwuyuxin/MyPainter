@@ -302,6 +302,21 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             update();
             continue;
         }
+        else if(instrList.at(0)=="scale"){
+            int id = instrList[1].toInt();
+            int x = instrList[2].toInt();
+            int y = instrList[3].toInt();
+            float s = instrList[4].toFloat();
+            for(size_t i=0;i<Figures.size();i++){
+                if(Figures[i]->id==id){
+                    QPoint ScaleCenter(x,y);
+                    Figures[i]->ScaleFigure(ScaleCenter,s);
+                    break;
+                }
+            }
+            update();
+            continue;
+        }
         else if(instrList.at(0)=="setColor"){
             int R = instrList[1].toInt();
             int G = instrList[2].toInt();

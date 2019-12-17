@@ -13,6 +13,7 @@ public:
     void AddVertex(QPoint p);
     void DrawFigure(QPainter &pp);
     void RotateFigure(QPoint RotateCenter, int angle);
+    void ScaleFigure(QPoint ScaleCenter, float mutiple);
     void DrawUseDDA(QPainter &pp);
     void DrawUseBresenham(QPainter &pp);
 
