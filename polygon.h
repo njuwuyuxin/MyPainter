@@ -10,6 +10,7 @@ private:
 public:
     Polygon();
     Polygon(int ID);
+    Polygon(const vector<QPoint> &vertexes);
     void AddVertex(QPoint p);
     void DrawFigure(QPainter &pp);
     void RotateFigure(QPoint RotateCenter, int angle);

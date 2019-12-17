@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     //初始化各项绘制状态
     isDrawing=false;
     CurrentFigureMode=DrawLine;
+    currentFigure=NULL;
 }
 
 MainWindow::~MainWindow()
@@ -69,17 +70,20 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             update();
         }
     }
-    else if(event->buttons()==Qt::RightButton){
+    else if(event->buttons()==Qt::RightButton){  //多边形和曲线画完触发
         QPainter pp(&tempPixMap);
         pp.setPen(PenColor);
         if(CurrentFigureMode==DrawPolygon){      //点击鼠标右键意味着一个多边形已画完，需自动补齐最后一条边
             Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],PolygonVertex[0]);
+            Polygon* one_poly=new Polygon(PolygonVertex);
+            currentFigure=one_poly;
             pixMap = tempPixMap;
             PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
         }
         else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
-             Curve oneCurve(CurveControlPoint);
-             oneCurve.DrawFigure(pp);
+             Curve* oneCurve=new Curve(CurveControlPoint);
+             currentFigure=oneCurve;
+             oneCurve->DrawFigure(pp);
              pixMap = tempPixMap;
              CurveControlPoint.clear();
         }
@@ -131,20 +135,30 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
     tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
     QPainter pp(&tempPixMap);
     pp.setPen(PenColor);
-    if(CurrentFigureMode==DrawLine)
+    if(CurrentFigureMode==DrawLine)     //直线画完触发
     {
+        Line* one_line=new Line(0,startPoint,endPoint);
+        currentFigure = one_line;
         Line::DrawUseBresenham(pp,startPoint,endPoint);
 //        Line::DrawUseDDA(pp,startPoint,endPoint);
     }
-    if(CurrentFigureMode==DrawCircle)
+    if(CurrentFigureMode==DrawCircle)   //圆画完触发
     {
+        Circle* one_circle=new Circle(startPoint,endPoint);
+        currentFigure=one_circle;
         Circle::DrawUseMidCircle(pp,startPoint,endPoint);
     }
-    if(CurrentFigureMode==DrawOval)
+    if(CurrentFigureMode==DrawOval)    //椭圆画完触发
     {
+        int rx=abs(startPoint.x()-endPoint.x())/2;
+        int ry=abs(startPoint.y()-endPoint.y())/2;
+        int cx=startPoint.x()+endPoint.x()/2;
+        int cy=startPoint.y()+endPoint.y()/2;
+        Ellipse* one_ellipse=new Ellipse(0,cx,cy,rx,ry);
+        currentFigure=one_ellipse;
         Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
     }
-    if(CurrentFigureMode==DrawPolygon)
+    if(CurrentFigureMode==DrawPolygon) //多边形尚未画完！多边形画完的触发函数在PressEvent中，曲线同理
     {
         if(PolygonVertex.size()!=0){        //如果顶点集为空，证明之前点击了右键，一个多边形已完成，顶点集被清空
             PolygonVertex.push_back(event->pos());

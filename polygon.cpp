@@ -10,6 +10,13 @@ Polygon::Polygon(int ID)
     id = ID;
 }
 
+Polygon::Polygon(const vector<QPoint> &vertexes)
+{
+    for(size_t i=0;i<vertexes.size();i++){
+        Vertex.push_back(vertexes[i]);
+    }
+}
+
 void Polygon::AddVertex(QPoint p)
 {
     Vertex.push_back(p);
