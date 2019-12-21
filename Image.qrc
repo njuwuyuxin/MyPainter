@@ -15,5 +15,7 @@
         <file>Images/polygon.png</file>
         <file>Images/SelectColor.png</file>
         <file>Images/smaller.png</file>
+        <file>Images/rotate.png</file>
+        <file>Images/Move.png</file>
     </qresource>
 </RCC>

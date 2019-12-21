@@ -430,3 +430,21 @@ void MainWindow::on_actionResetPix_triggered()
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
+void MainWindow::on_actionMove_triggered()
+{
+    CurrentEditMode=Move;
+    cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
+}
+
+void MainWindow::on_actionRotate_triggered()
+{
+    CurrentEditMode=Rotate;
+    cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
+}
+
+void MainWindow::on_actionScale_triggered()
+{
+    CurrentEditMode=Scale;
+    cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
+}
+

@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
@@ -50,6 +50,9 @@
    <addaction name="actionDrawOval"/>
    <addaction name="actionDrawCurve"/>
    <addaction name="actionResetPix"/>
+   <addaction name="actionMove"/>
+   <addaction name="actionRotate"/>
+   <addaction name="actionScale"/>
   </widget>
   <action name="actionLoad">
    <property name="text">
@@ -140,6 +143,42 @@
    </property>
    <property name="toolTip">
     <string>重置画布</string>
+   </property>
+  </action>
+  <action name="actionRotate">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/rotate.png</normaloff>:/Images/rotate.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate</string>
+   </property>
+   <property name="toolTip">
+    <string>旋转</string>
+   </property>
+  </action>
+  <action name="actionScale">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/Larger.png</normaloff>:/Images/Larger.png</iconset>
+   </property>
+   <property name="text">
+    <string>Scale</string>
+   </property>
+   <property name="toolTip">
+    <string>缩放</string>
+   </property>
+  </action>
+  <action name="actionMove">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/Move.png</normaloff>:/Images/Move.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move</string>
+   </property>
+   <property name="toolTip">
+    <string>平移</string>
    </property>
   </action>
  </widget>

@@ -23,6 +23,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 enum FigureMode{DrawLine,DrawCircle,DrawOval,DrawPolygon,DrawCurve,Clear};
+enum EditMode{Move,Scale,Rotate,Cut};
 enum Algorithm{Default,Bresenham,DDA,Bezier,BSpline};
 
 class MainWindow : public QMainWindow
@@ -66,6 +67,7 @@ private:
     void DrawAllFigures();
 
     FigureMode CurrentFigureMode;     //表示当前按钮点击了某个图形图标，接下来会绘制该图形
+    EditMode CurrentEditMode;         //表示当前点击了某个编辑图表，切换编辑功能
 
 
 
@@ -79,5 +81,8 @@ private slots:
     void on_actionDrawOval_triggered();
     void on_actionDrawCurve_triggered();
     void on_actionResetPix_triggered();
+    void on_actionMove_triggered();
+    void on_actionRotate_triggered();
+    void on_actionScale_triggered();
 };
 #endif // MAINWINDOW_H
