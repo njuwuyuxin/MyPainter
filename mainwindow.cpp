@@ -477,6 +477,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSelectColor_triggered()
 {
+    pixMap=tempPixMap;
     PenColor=QColorDialog::getColor(Qt::black,this);
     qDebug()<<PenColor<<endl;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
@@ -484,6 +485,7 @@ void MainWindow::on_actionSelectColor_triggered()
 
 void MainWindow::on_actionDrawLine_triggered()
 {
+    pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawLine;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
@@ -491,6 +493,7 @@ void MainWindow::on_actionDrawLine_triggered()
 
 void MainWindow::on_actionDrawPolygon_triggered()
 {
+    pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawPolygon;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
@@ -498,6 +501,7 @@ void MainWindow::on_actionDrawPolygon_triggered()
 
 void MainWindow::on_actionDrawCircle_triggered()
 {
+    pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawCircle;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
@@ -512,6 +516,7 @@ void MainWindow::on_actionDrawOval_triggered()
 
 void MainWindow::on_actionDrawCurve_triggered()
 {
+    pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawCurve;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
