@@ -18,7 +18,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     //初始化各项绘制状态
     isDrawing=false;
+    CurrentMode=Drawing;
     CurrentFigureMode=DrawLine;
+    CurrentEditMode=Move;
     currentFigure=NULL;
 }
 
@@ -48,126 +50,179 @@ void MainWindow::paintEvent(QPaintEvent *)
 /*----------------鼠标事件处理函数---------------------*/
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
-    if(event->buttons()==Qt::LeftButton){
-        if(CurrentFigureMode==DrawPolygon)
-        {
-            isDrawing=true;
-            if(PolygonVertex.size()==0){
+    if(CurrentMode==Drawing){           //当处于绘制模式时，对鼠标事件的处理
+        if(event->buttons()==Qt::LeftButton){
+            if(CurrentFigureMode==DrawPolygon)
+            {
+                isDrawing=true;
+                if(PolygonVertex.size()==0){        //如果是第一个点直接加入顶点集
+                    PolygonPixMap=pixMap;           //初始化多边形画布
+                    QPoint s = event->pos();
+                    PolygonVertex.push_back(s);
+                }
+            }
+            else if(CurrentFigureMode==DrawCurve){
+                isDrawing=true;
                 QPoint s = event->pos();
-                PolygonVertex.push_back(s);
+                CurveControlPoint.push_back(s);
+            }
+            else
+            {
+                isDrawing=true;
+                startPoint=event->pos();
+                endPoint=event->pos();
+                update();
             }
         }
-        else if(CurrentFigureMode==DrawCurve){
-            isDrawing=true;
-            QPoint s = event->pos();
-            CurveControlPoint.push_back(s);
-        }
-        else
-        {
-            isDrawing=true;
-            startPoint=event->pos();
-            endPoint=event->pos();
-            update();
+        else if(event->buttons()==Qt::RightButton){  //多边形和曲线画完触发
+            qDebug()<<"press right button"<<endl;
+            QPainter pp(&tempPixMap);
+            pp.setPen(PenColor);
+            if(CurrentFigureMode==DrawPolygon){      //点击鼠标右键意味着一个多边形已画完，需自动补齐最后一条边
+                Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],PolygonVertex[0]);
+                Polygon* one_poly=new Polygon(PolygonVertex);
+                currentFigure=one_poly;
+                PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
+                CurrentMode=Editing;
+                update();
+            }
+            else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
+                 Curve* oneCurve=new Curve(CurveControlPoint);
+                 currentFigure=oneCurve;
+                 oneCurve->DrawFigure(pp);
+                 CurveControlPoint.clear();
+                 CurrentMode=Editing;
+                 update();
+            }
         }
     }
-    else if(event->buttons()==Qt::RightButton){  //多边形和曲线画完触发
-        QPainter pp(&tempPixMap);
-        pp.setPen(PenColor);
-        if(CurrentFigureMode==DrawPolygon){      //点击鼠标右键意味着一个多边形已画完，需自动补齐最后一条边
-            Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],PolygonVertex[0]);
-            Polygon* one_poly=new Polygon(PolygonVertex);
-            currentFigure=one_poly;
-            pixMap = tempPixMap;
-            PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
+    else if(CurrentMode==Editing){          //当处于绘制模式时，对鼠标事件的处理
+        if(event->buttons()==Qt::LeftButton){
+            qDebug()<<"Press left button in editing mode"<<endl;
+            if(CurrentEditMode==Move){
+                EditStartPoint=event->pos();
+                EditEndPoint=event->pos();
+            }
         }
-        else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
-             Curve* oneCurve=new Curve(CurveControlPoint);
-             currentFigure=oneCurve;
-             oneCurve->DrawFigure(pp);
-             pixMap = tempPixMap;
-             CurveControlPoint.clear();
-        }
-
     }
 }
 
 void MainWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    if(event->buttons()==Qt::LeftButton&&isDrawing){
-        endPoint=event->pos();
-        tempPixMap=pixMap;//每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
+    if(CurrentMode==Drawing){           //当处于绘制模式时，对鼠标事件的处理
+        if(event->buttons()==Qt::LeftButton&&isDrawing){
+            endPoint=event->pos();
+            if(CurrentFigureMode==DrawPolygon)
+                tempPixMap=PolygonPixMap;
+            else
+                tempPixMap=pixMap;//每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制；多边形需要特殊处理，每次以多边形特制画布为基础进行绘制
+            QPainter pp(&tempPixMap);
+            pp.setPen(PenColor);
+            if(CurrentFigureMode==DrawLine)
+            {
+                Line::DrawUseBresenham(pp,startPoint,endPoint);
+    //            Line::DrawUseDDA(pp,startPoint,endPoint);
+                update();
+                return;
+            }
+            if(CurrentFigureMode==DrawCircle)
+            {
+                Circle::DrawUseMidCircle(pp,startPoint,endPoint);
+                update();
+                return;
+            }
+            if(CurrentFigureMode==DrawOval)
+            {
+                Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
+                update();
+                return;
+            }
+            if(CurrentFigureMode==DrawPolygon)
+            {
+                if(PolygonVertex.size()>0){
+                    QPoint tempPoint = event->pos();
+                    Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],tempPoint);
+                }
+                update();
+            }
+        }
+    }
+    else if(CurrentMode==Editing){          //当处于绘制模式时，对鼠标事件的处理
+        tempPixMap=pixMap;
         QPainter pp(&tempPixMap);
         pp.setPen(PenColor);
-        if(CurrentFigureMode==DrawLine)
-        {
-            Line::DrawUseBresenham(pp,startPoint,endPoint);
-//            Line::DrawUseDDA(pp,startPoint,endPoint);
-            update();
-            return;
-        }
-        if(CurrentFigureMode==DrawCircle)
-        {
-            Circle::DrawUseMidCircle(pp,startPoint,endPoint);
-            update();
-            return;
-        }
-        if(CurrentFigureMode==DrawOval)
-        {
-            Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
-            update();
-            return;
-        }
-        if(CurrentFigureMode==DrawPolygon)
-        {
-            if(PolygonVertex.size()>0){
-                QPoint tempPoint = event->pos();
-                Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-1],tempPoint);
+        if(event->buttons()==Qt::LeftButton){
+            if(CurrentEditMode==Move){
+                EditEndPoint=event->pos();
+                currentFigure->Move(EditEndPoint.x()-EditStartPoint.x(),EditEndPoint.y()-EditStartPoint.y());
+                currentFigure->DrawFigure(pp);
+                currentFigure->PrintMyself();
+                EditStartPoint=EditEndPoint;
+                update();
+                return;
             }
-            update();
         }
     }
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    isDrawing=false;
-    endPoint=event->pos();
-    tempPixMap=pixMap;  //每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制
-    QPainter pp(&tempPixMap);
-    pp.setPen(PenColor);
-    if(CurrentFigureMode==DrawLine)     //直线画完触发
-    {
-        Line* one_line=new Line(0,startPoint,endPoint);
-        currentFigure = one_line;
-        Line::DrawUseBresenham(pp,startPoint,endPoint);
-//        Line::DrawUseDDA(pp,startPoint,endPoint);
+    if(CurrentMode==Drawing){           //当处于绘制模式时，对鼠标事件的处理
+        isDrawing=false;
+        endPoint=event->pos();
+        if(CurrentFigureMode==DrawPolygon)
+            tempPixMap=PolygonPixMap;
+        else
+            tempPixMap=pixMap;//每次以上一次保存下的画布为基础，在上面进行绘制，移动时仅对tempPixMap绘制；多边形需要特殊处理，每次以多边形特制画布为基础进行绘制
+        QPainter pp(&tempPixMap);
+        pp.setPen(PenColor);
+        if(CurrentFigureMode==DrawLine)     //直线画完触发
+        {
+            Line* one_line=new Line(0,startPoint,endPoint);
+            currentFigure = one_line;
+            Line::DrawUseBresenham(pp,startPoint,endPoint);
+    //        Line::DrawUseDDA(pp,startPoint,endPoint);
+            CurrentMode=Editing;
+        }
+        if(CurrentFigureMode==DrawCircle)   //圆画完触发
+        {
+            Circle* one_circle=new Circle(startPoint,endPoint);
+            currentFigure=one_circle;
+            Circle::DrawUseMidCircle(pp,startPoint,endPoint);
+            CurrentMode=Editing;
+        }
+        if(CurrentFigureMode==DrawOval)    //椭圆画完触发
+        {
+            Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
+            int cx=(startPoint.x()+endPoint.x())/2;
+            int cy=(startPoint.y()+endPoint.y())/2;
+            int rx=abs(startPoint.x()-endPoint.x())/2;
+            int ry=abs(startPoint.y()-endPoint.y())/2;
+            Ellipse* one_ellipse=new Ellipse(0,cx,cy,rx,ry);
+            currentFigure=one_ellipse;
+            CurrentMode=Editing;
+        }
+        if(CurrentFigureMode==DrawPolygon) //多边形尚未画完！多边形画完的触发函数在PressEvent中，曲线同理
+        {
+            if(PolygonVertex.size()!=0){        //如果顶点集为空，证明之前点击了右键，一个多边形已完成，顶点集被清空
+                PolygonVertex.push_back(event->pos());
+                Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-2],PolygonVertex[PolygonVertex.size()-1]);
+                PolygonPixMap=tempPixMap;       //将多边形绘制过程临时保存在专用画布上
+            }
+        }
+        update();
     }
-    if(CurrentFigureMode==DrawCircle)   //圆画完触发
-    {
-        Circle* one_circle=new Circle(startPoint,endPoint);
-        currentFigure=one_circle;
-        Circle::DrawUseMidCircle(pp,startPoint,endPoint);
-    }
-    if(CurrentFigureMode==DrawOval)    //椭圆画完触发
-    {
-        int rx=abs(startPoint.x()-endPoint.x())/2;
-        int ry=abs(startPoint.y()-endPoint.y())/2;
-        int cx=startPoint.x()+endPoint.x()/2;
-        int cy=startPoint.y()+endPoint.y()/2;
-        Ellipse* one_ellipse=new Ellipse(0,cx,cy,rx,ry);
-        currentFigure=one_ellipse;
-        Ellipse::DrawUseMidOval(pp,startPoint,endPoint);
-    }
-    if(CurrentFigureMode==DrawPolygon) //多边形尚未画完！多边形画完的触发函数在PressEvent中，曲线同理
-    {
-        if(PolygonVertex.size()!=0){        //如果顶点集为空，证明之前点击了右键，一个多边形已完成，顶点集被清空
-            PolygonVertex.push_back(event->pos());
-            Line::DrawUseBresenham(pp,PolygonVertex[PolygonVertex.size()-2],PolygonVertex[PolygonVertex.size()-1]);
+    else if(CurrentMode==Editing){          //当处于绘制模式时，对鼠标事件的处理
+        if(CurrentEditMode==Move){
+            if(event->button()==Qt::LeftButton){
+                EditEndPoint=event->pos();
+                pixMap=tempPixMap;          //平移结束后将临时画布保存到正式画布上固定住
+                qDebug()<<"画布已固定"<<endl;
+                CurrentMode=Drawing;
+                update();
+            }
         }
     }
-
-    pixMap=tempPixMap;       //鼠标松开时，认为该次绘制已完成，保存到pixMap中
-    update();
 }
 
 void MainWindow::DrawAllFigures()
@@ -394,30 +449,35 @@ void MainWindow::on_actionSelectColor_triggered()
 
 void MainWindow::on_actionDrawLine_triggered()
 {
+    CurrentMode=Drawing;
     CurrentFigureMode=DrawLine;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawPolygon_triggered()
 {
+    CurrentMode=Drawing;
     CurrentFigureMode=DrawPolygon;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawCircle_triggered()
 {
+    CurrentMode=Drawing;
     CurrentFigureMode=DrawCircle;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawOval_triggered()
 {
+    CurrentMode=Drawing;
     CurrentFigureMode=DrawOval;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 
 void MainWindow::on_actionDrawCurve_triggered()
 {
+    CurrentMode=Drawing;
     CurrentFigureMode=DrawCurve;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
@@ -432,18 +492,21 @@ void MainWindow::on_actionResetPix_triggered()
 
 void MainWindow::on_actionMove_triggered()
 {
+    CurrentMode=Editing;
     CurrentEditMode=Move;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
 }
 
 void MainWindow::on_actionRotate_triggered()
 {
+    CurrentMode=Editing;
     CurrentEditMode=Rotate;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
 }
 
 void MainWindow::on_actionScale_triggered()
 {
+    CurrentMode=Editing;
     CurrentEditMode=Scale;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
 }

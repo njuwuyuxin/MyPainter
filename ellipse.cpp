@@ -31,6 +31,13 @@ void Ellipse::ScaleFigure(QPoint ScaleCenter, float mutiple)
     Ry=(int)(Ry*mutiple);
 }
 
+void Ellipse::PrintMyself()
+{
+    qDebug()<<"This is an Ellipse"<<endl;
+    qDebug()<<"CenterPoint: "<<centerPoint<<endl;
+    qDebug()<<"Rx:"<<Rx<<" Ry:"<<Ry<<endl;
+}
+
 void Ellipse::DrawUseMidOval(QPainter &pp, QPoint &begin, QPoint &end)
 {
     int x0,y0,x1,y1,centerX,centerY;
@@ -93,6 +100,8 @@ void Ellipse::DrawUseMidOval(QPainter &pp, int centerX, int centerY, int Rx, int
 
 void Ellipse::Move(int x, int y)
 {
+//    qDebug()<<"centerPoint before:"<<centerPoint<<endl;
     QPoint newPoint(centerPoint.x()+x,centerPoint.y()+y);
     centerPoint = newPoint;
+//    qDebug()<<"centerPoint after:"<<centerPoint<<endl;
 }

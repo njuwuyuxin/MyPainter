@@ -41,6 +41,11 @@ void Polygon::ScaleFigure(QPoint ScaleCenter, float mutiple)
     }
 }
 
+void Polygon::PrintMyself()
+{
+
+}
+
 void Polygon::DrawUseDDA(QPainter &pp)
 {
     for(size_t i=1;i<Vertex.size();i++){

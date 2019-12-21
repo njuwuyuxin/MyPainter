@@ -30,6 +30,11 @@ void Circle::ScaleFigure(QPoint ScaleCenter, float mutiple)
     radius = (int)(radius*mutiple);
 }
 
+void Circle::PrintMyself()
+{
+
+}
+
 void Circle::DrawUseMidCircle(QPainter& pp, QPoint center, QPoint edge)
 {
     int R=CalculateDistance(center,edge);

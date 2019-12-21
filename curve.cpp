@@ -55,6 +55,11 @@ void Curve::ScaleFigure(QPoint ScaleCenter, float mutiple)
     }
 }
 
+void Curve::PrintMyself()
+{
+
+}
+
 void Curve::DrawUseBezier(QPainter &pp)
 {
     for(double u=0;u<=1;u+=0.001){

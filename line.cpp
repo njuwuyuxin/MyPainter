@@ -16,6 +16,7 @@ Line::Line(int line_id,QPoint s, QPoint e)
 
 void Line::DrawFigure(QPainter& pp)
 {
+    DrawUseBresenham(pp,startPoint,endPoint);
 }
 
 void Line::RotateFigure(QPoint RotateCenter, int angle)
@@ -28,6 +29,11 @@ void Line::ScaleFigure(QPoint ScaleCenter, float mutiple)
 {
     Figure::ScalePoint(startPoint,ScaleCenter,mutiple);
     Figure::ScalePoint(endPoint,ScaleCenter,mutiple);
+}
+
+void Line::PrintMyself()
+{
+
 }
 
 void Line::DrawUseBresenham(QPainter &pp, QPoint &begin, QPoint &end)

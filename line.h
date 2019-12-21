@@ -22,6 +22,7 @@ public:
     void DrawFigure(QPainter& pp);
     void RotateFigure(QPoint RotateCenter, int angle);
     void ScaleFigure(QPoint ScaleCenter, float mutiple);
+    void PrintMyself();
     static void DrawUseBresenham(QPainter& pp,QPoint& begin,QPoint& end);
     static void DrawUseDDA(QPainter& pp,QPoint& begin,QPoint& end);
     void DrawUseBresenham(QPainter& pp);

@@ -22,6 +22,7 @@ QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
+enum Mode{Drawing,Editing};
 enum FigureMode{DrawLine,DrawCircle,DrawOval,DrawPolygon,DrawCurve,Clear};
 enum EditMode{Move,Scale,Rotate,Cut};
 enum Algorithm{Default,Bresenham,DDA,Bezier,BSpline};
@@ -46,12 +47,15 @@ private:
     int windowWidth;
     int windowHeight;
 
-    QPixmap tempPixMap;               //临时画布，一些预览性质的内容会暂时画在临时画布上，确定绘制完成时会转移到pixMap上
-    QPixmap pixMap;                   //全局变量画布
+    QPixmap tempPixMap;               //临时画布，一些预览性质的内容会暂时画在临时画布上，确定绘制完成时会转移到pixMap上,PainterEvent中时刻更新该画布
+    QPixmap PolygonPixMap;            //多边形专用画布，为了实现多边形每条边实时显示功能
+    QPixmap pixMap;                   //全局变量画布，用来保存最终定型的画布
     QColor PenColor;                  //当前画笔颜色
     bool isDrawing;                   //是否正在绘制（鼠标按下到抬起的过程）
-    QPoint startPoint;                //鼠标起始坐标
-    QPoint endPoint;                  //鼠标最终坐标
+    QPoint startPoint;                //鼠标起始坐标（绘制时）
+    QPoint endPoint;                  //鼠标最终坐标（绘制时）
+    QPoint EditStartPoint;            //鼠标起始坐标（编辑时）
+    QPoint EditEndPoint;              //鼠标最终坐标（编辑时）
     QImage imageMap;
     vector<QPoint> PolygonVertex;     //用于记录当前所画多边形顶点集，每次画新的多边形时会首先清空内部元素
     vector<QPoint> CurveControlPoint; //用于记录绘制曲线的控制点集，每次画新的曲线时会首先清空内部元素
@@ -66,6 +70,7 @@ private:
     void SavePixMap(QString file_name);
     void DrawAllFigures();
 
+    Mode CurrentMode;                 //表示当前软件所处状态：绘制图元或编辑图元
     FigureMode CurrentFigureMode;     //表示当前按钮点击了某个图形图标，接下来会绘制该图形
     EditMode CurrentEditMode;         //表示当前点击了某个编辑图表，切换编辑功能
 

@@ -14,6 +14,7 @@ public:
     void DrawFigure(QPainter &pp);
     void RotateFigure(QPoint RotateCenter, int angle);
     void ScaleFigure(QPoint ScaleCenter, float mutiple);
+    void PrintMyself();
     static void DrawUseMidOval(QPainter& pp,QPoint& begin,QPoint& end);         //已知起始点和终点坐标 画椭圆
     static void DrawUseMidOval(QPainter& pp,int centerX,int centerY,int Rx,int Ry);      //已知中心坐标和长短轴 画椭圆
 
