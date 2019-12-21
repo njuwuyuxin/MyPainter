@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     CurrentFigureMode=DrawLine;
     CurrentEditMode=Move;
     currentFigure=NULL;
+    EditCenter.setX(-1);
+    EditCenter.setY(-1);
 }
 
 MainWindow::~MainWindow()
@@ -103,6 +105,15 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 EditStartPoint=event->pos();
                 EditEndPoint=event->pos();
             }
+            else if(CurrentEditMode==Scale){
+                EditCenter=event->pos();
+            }
+        }
+        if(event->buttons()==Qt::RightButton){
+            if(CurrentEditMode==Scale){
+                pixMap=tempPixMap;      //点击右键表示该次变换已完成，保存画布，切换回绘制状态
+                CurrentMode=Drawing;
+            }
         }
     }
 }
@@ -167,7 +178,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    if(CurrentMode==Drawing){           //当处于绘制模式时，对鼠标事件的处理
+    if(CurrentMode==Drawing&&event->button()==Qt::LeftButton){           //当处于绘制模式时，对鼠标事件的处理
         isDrawing=false;
         endPoint=event->pos();
         if(CurrentFigureMode==DrawPolygon)
@@ -221,6 +232,30 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
                 CurrentMode=Drawing;
                 update();
             }
+        }
+    }
+}
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    tempPixMap=pixMap;
+    QPainter pp(&tempPixMap);
+    pp.setPen(PenColor);
+    if(CurrentMode==Editing){
+        if(CurrentEditMode==Scale){
+            if(EditCenter.x()==-1){
+                qDebug()<<"尚未确定缩放中心，操作取消"<<endl;
+                return;
+            }
+
+            if(event->delta()>0){
+                currentFigure->ScaleFigure(EditCenter,1.1);
+            }
+            else{
+                currentFigure->ScaleFigure(EditCenter,0.9);
+            }
+            currentFigure->DrawFigure(pp);
+            update();
         }
     }
 }

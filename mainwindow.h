@@ -41,6 +41,7 @@ protected:
     void mousePressEvent(QMouseEvent* );
     void mouseMoveEvent(QMouseEvent* );
     void mouseReleaseEvent(QMouseEvent* );
+    void wheelEvent(QWheelEvent *event);
 
 private:
     Ui::MainWindow *ui;
@@ -56,6 +57,7 @@ private:
     QPoint endPoint;                  //鼠标最终坐标（绘制时）
     QPoint EditStartPoint;            //鼠标起始坐标（编辑时）
     QPoint EditEndPoint;              //鼠标最终坐标（编辑时）
+    QPoint EditCenter;                //编辑模式下，用来确定旋转和缩放时的中心点
     QImage imageMap;
     vector<QPoint> PolygonVertex;     //用于记录当前所画多边形顶点集，每次画新的多边形时会首先清空内部元素
     vector<QPoint> CurveControlPoint; //用于记录绘制曲线的控制点集，每次画新的曲线时会首先清空内部元素
