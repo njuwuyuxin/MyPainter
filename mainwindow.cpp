@@ -77,7 +77,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
         }
         else if(event->buttons()==Qt::RightButton){  //多边形和曲线画完触发
-            qDebug()<<"press right button"<<endl;
+//            qDebug()<<"press right button"<<endl;
             QPainter pp(&tempPixMap);
             pp.setPen(PenColor);
             if(CurrentFigureMode==DrawPolygon){      //点击鼠标右键意味着一个多边形已画完，需自动补齐最后一条边
@@ -113,7 +113,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
         }
         if(event->buttons()==Qt::RightButton){
-            if(CurrentEditMode==Scale||CurrentEditMode==Rotate){
+            if(CurrentEditMode==Move||CurrentEditMode==Scale||CurrentEditMode==Rotate){
                 pixMap=tempPixMap;      //点击右键表示该次变换已完成，保存画布，切换回绘制状态
                 CurrentMode=Drawing;
             }
@@ -170,7 +170,7 @@ void MainWindow::mouseMoveEvent(QMouseEvent *event)
                 EditEndPoint=event->pos();
                 currentFigure->Move(EditEndPoint.x()-EditStartPoint.x(),EditEndPoint.y()-EditStartPoint.y());
                 currentFigure->DrawFigure(pp);
-                currentFigure->PrintMyself();
+//                currentFigure->PrintMyself();
                 EditStartPoint=EditEndPoint;
                 update();
                 return;
@@ -230,9 +230,9 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
         if(CurrentEditMode==Move){
             if(event->button()==Qt::LeftButton){
                 EditEndPoint=event->pos();
-                pixMap=tempPixMap;          //平移结束后将临时画布保存到正式画布上固定住
-                qDebug()<<"画布已固定"<<endl;
-                CurrentMode=Drawing;
+//                pixMap=tempPixMap;          //平移结束后将临时画布保存到正式画布上固定住
+//                qDebug()<<"画布已固定"<<endl;
+//                CurrentMode=Drawing;
                 update();
             }
         }
@@ -527,6 +527,7 @@ void MainWindow::on_actionDrawCircle_triggered()
 
 void MainWindow::on_actionDrawOval_triggered()
 {
+    pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawOval;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
