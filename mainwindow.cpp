@@ -565,6 +565,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSelectColor_triggered()
 {
+    CutVertex.clear();
     pixMap=tempPixMap;
     PenColor=QColorDialog::getColor(Qt::black,this);
     qDebug()<<PenColor<<endl;
@@ -573,6 +574,7 @@ void MainWindow::on_actionSelectColor_triggered()
 
 void MainWindow::on_actionDrawLine_triggered()
 {
+    CutVertex.clear();
     pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawLine;
@@ -581,6 +583,7 @@ void MainWindow::on_actionDrawLine_triggered()
 
 void MainWindow::on_actionDrawPolygon_triggered()
 {
+    CutVertex.clear();
     pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawPolygon;
@@ -589,6 +592,7 @@ void MainWindow::on_actionDrawPolygon_triggered()
 
 void MainWindow::on_actionDrawCircle_triggered()
 {
+    CutVertex.clear();
     pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawCircle;
@@ -597,6 +601,7 @@ void MainWindow::on_actionDrawCircle_triggered()
 
 void MainWindow::on_actionDrawOval_triggered()
 {
+    CutVertex.clear();
     pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawOval;
@@ -605,6 +610,7 @@ void MainWindow::on_actionDrawOval_triggered()
 
 void MainWindow::on_actionDrawCurve_triggered()
 {
+    CutVertex.clear();
     pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawCurve;
@@ -613,6 +619,7 @@ void MainWindow::on_actionDrawCurve_triggered()
 
 void MainWindow::on_actionResetPix_triggered()
 {
+    CutVertex.clear();
     CurrentFigureMode=Clear;
     resetPixMap(windowWidth,windowHeight);
     update();
@@ -621,6 +628,7 @@ void MainWindow::on_actionResetPix_triggered()
 
 void MainWindow::on_actionMove_triggered()
 {
+    CutVertex.clear();
     CurrentMode=Editing;
     CurrentEditMode=Move;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
@@ -628,6 +636,7 @@ void MainWindow::on_actionMove_triggered()
 
 void MainWindow::on_actionRotate_triggered()
 {
+    CutVertex.clear();
     CurrentMode=Editing;
     CurrentEditMode=Rotate;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
@@ -635,6 +644,7 @@ void MainWindow::on_actionRotate_triggered()
 
 void MainWindow::on_actionScale_triggered()
 {
+    CutVertex.clear();
     CurrentMode=Editing;
     CurrentEditMode=Scale;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
@@ -642,6 +652,7 @@ void MainWindow::on_actionScale_triggered()
 
 void MainWindow::on_actionClip_triggered()
 {
+    CutVertex.clear();
     CurrentMode=Editing;
     CurrentEditMode=Cut;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
