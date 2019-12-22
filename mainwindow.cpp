@@ -108,9 +108,12 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             else if(CurrentEditMode==Scale){
                 EditCenter=event->pos();
             }
+            else if(CurrentEditMode==Rotate){
+                EditCenter=event->pos();
+            }
         }
         if(event->buttons()==Qt::RightButton){
-            if(CurrentEditMode==Scale){
+            if(CurrentEditMode==Scale||CurrentEditMode==Rotate){
                 pixMap=tempPixMap;      //点击右键表示该次变换已完成，保存画布，切换回绘制状态
                 CurrentMode=Drawing;
             }
@@ -249,10 +252,25 @@ void MainWindow::wheelEvent(QWheelEvent *event)
             }
 
             if(event->delta()>0){
-                currentFigure->ScaleFigure(EditCenter,1.1);
+                currentFigure->ScaleFigure(EditCenter,1.1f);
             }
             else{
-                currentFigure->ScaleFigure(EditCenter,0.9);
+                currentFigure->ScaleFigure(EditCenter,0.9f);
+            }
+            currentFigure->DrawFigure(pp);
+            update();
+        }
+        else if(CurrentEditMode==Rotate){
+            if(EditCenter.x()==-1){
+                qDebug()<<"尚未确定缩放中心，操作取消"<<endl;
+                return;
+            }
+
+            if(event->delta()>0){
+                currentFigure->RotateFigure(EditCenter,3);
+            }
+            else{
+                currentFigure->RotateFigure(EditCenter,-3);
             }
             currentFigure->DrawFigure(pp);
             update();
