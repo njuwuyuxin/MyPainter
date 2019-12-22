@@ -31,6 +31,68 @@ void Line::ScaleFigure(QPoint ScaleCenter, float mutiple)
     Figure::ScalePoint(endPoint,ScaleCenter,mutiple);
 }
 
+void Line::CutUseCohen(int x1, int y1, int x2, int y2)
+{
+    CutUseBarsky(x1,y1,x2,y2);
+}
+
+void Line::CutUseBarsky(int x1, int y1, int x2, int y2)
+{
+    qDebug()<<"Before cut startPoint:"<<startPoint<<" EndPoint:"<<endPoint<<endl;
+    int xmin=x1,xmax=x2;
+    int ymin=y1,ymax=y2;
+
+    double p[4];
+    double q[4];
+    int startX=startPoint.x();int endX=endPoint.x();
+    int startY=startPoint.y();int endY=endPoint.y();
+    p[0]=-(endX-startX);
+    p[1]=endX-startX;
+    p[2]=-(endY-startY);
+    p[3]=endY-startY;
+
+    q[0]=startX-xmin;
+    q[1]=xmax-startX;
+    q[2]=startY-ymin;
+    q[3]=ymax-startY;
+
+    double u1=0,u2=1;
+    /*若存在p[k]=0，线段平行于窗口某边界*/
+    for(int i=0;i<4;i++)
+    {
+        if(p[i]==0)
+        {
+            if(q[i]<0){
+                /*应当舍弃该直线*/
+                qDebug()<<"直线被舍弃1"<<endl;
+                return;
+            }
+        }
+        else{
+            /*此边界与直线有交点,更新u1,u2*/
+            double r=q[i]/p[i];
+            if(p[i]<0)//由外到内
+                u1=max(u1,r);
+            else //由内到外
+                u2=min(u2,r);
+        }
+    }
+    if(u1>u2){//裁剪的左侧在右侧的右边，舍弃
+        qDebug()<<"直线被舍弃2"<<endl;
+        return;
+    }
+    else{
+
+        startPoint.setX(startX+(int)(u1*p[1]+0.5));
+        startPoint.setY(startY+(int)(u1*p[3]+0.5));
+
+        endPoint.setX(startX+(int)(u2*p[1]+0.5));
+        endPoint.setY(startY+(int)(u2*p[3]+0.5));
+        qDebug()<<"After cut startPoint:"<<startPoint<<" EndPoint:"<<endPoint<<endl;
+        return;
+    }
+}
+
 void Line::PrintMyself()
 {
 

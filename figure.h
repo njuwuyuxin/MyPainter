@@ -21,6 +21,8 @@ public:
     virtual void DrawUseDDA(QPainter& pp);
     virtual void DrawUseBezier(QPainter& pp);
     virtual void DrawUseBSpline(QPainter& pp);
+    virtual void CutUseCohen(int x1,int y1,int x2,int y2);
+    virtual void CutUseBarsky(int x1,int y1,int x2,int y2);
 
     virtual void RotateFigure(QPoint RotateCenter, int angle) = 0;      //图元绕旋转中心旋转angle角度
     virtual void ScaleFigure(QPoint ScaleCenter,float mutiple) = 0;     //图元以缩放中心，缩放mutiple倍

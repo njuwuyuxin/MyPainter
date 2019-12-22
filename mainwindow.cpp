@@ -47,6 +47,7 @@ void MainWindow::paintEvent(QPaintEvent *)
     QPainter qpainter(this);
 //    painter.drawPixmap(0,56,tempPixMap);
     qpainter.drawPixmap(0,0,tempPixMap);  //无偏移量
+    UpdateUI();
 }
 
 /*----------------鼠标事件处理函数---------------------*/
@@ -58,6 +59,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             {
                 isDrawing=true;
                 if(PolygonVertex.size()==0){        //如果是第一个点直接加入顶点集
+                    startPoint=event->pos();
                     PolygonPixMap=pixMap;           //初始化多边形画布
                     QPoint s = event->pos();
                     PolygonVertex.push_back(s);
@@ -65,6 +67,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
             else if(CurrentFigureMode==DrawCurve){
                 isDrawing=true;
+                startPoint=event->pos();
                 QPoint s = event->pos();
                 CurveControlPoint.push_back(s);
             }
@@ -86,6 +89,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 currentFigure=one_poly;
                 PolygonVertex.clear();      //清空当前多边形顶点集，下次鼠标左键事件开始画新的多边形
                 CurrentMode=Editing;
+                CutVertex.clear();
                 update();
             }
             else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
@@ -94,13 +98,14 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                  oneCurve->DrawFigure(pp);
                  CurveControlPoint.clear();
                  CurrentMode=Editing;
+                 CutVertex.clear();
                  update();
             }
         }
     }
     else if(CurrentMode==Editing){          //当处于绘制模式时，对鼠标事件的处理
         if(event->buttons()==Qt::LeftButton){
-            qDebug()<<"Press left button in editing mode"<<endl;
+//            qDebug()<<"Press left button in editing mode"<<endl;
             if(CurrentEditMode==Move){
                 EditStartPoint=event->pos();
                 EditEndPoint=event->pos();
@@ -111,12 +116,28 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             else if(CurrentEditMode==Rotate){
                 EditCenter=event->pos();
             }
+            else if(CurrentEditMode==Cut){
+                QPoint pos=event->pos();
+                CutVertex.push_back(pos);
+                if(CutVertex.size()==2){
+                    currentFigure->CutUseBarsky(CutVertex[0].x(),CutVertex[0].y(),CutVertex[1].x(),CutVertex[1].y());
+                    tempPixMap=pixMap;
+                    QPainter pp(&tempPixMap);
+                    pp.setPen(PenColor);
+                    currentFigure->DrawFigure(pp);
+                    pixMap=tempPixMap;
+                    CurrentMode=Drawing;
+                    //重置一下绘制时的初始点，防止误画
+                    startPoint.setX(-1);
+                    startPoint.setY(-1);
+                    update();
+                    CutVertex.clear();
+                }
+            }
         }
         if(event->buttons()==Qt::RightButton){
-            if(CurrentEditMode==Move||CurrentEditMode==Scale||CurrentEditMode==Rotate){
-                pixMap=tempPixMap;      //点击右键表示该次变换已完成，保存画布，切换回绘制状态
-                CurrentMode=Drawing;
-            }
+            pixMap=tempPixMap;      //点击右键表示该次变换已完成，保存画布，切换回绘制状态
+            CurrentMode=Drawing;
         }
     }
 }
@@ -183,6 +204,9 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     if(CurrentMode==Drawing&&event->button()==Qt::LeftButton){           //当处于绘制模式时，对鼠标事件的处理
         isDrawing=false;
+        qDebug()<<startPoint<<endl;
+        if(startPoint.x()==-1&&startPoint.y()==-1)      //表面初始点尚未初始化，此次鼠标松开事件不处理
+            return;
         endPoint=event->pos();
         if(CurrentFigureMode==DrawPolygon)
             tempPixMap=PolygonPixMap;
@@ -197,6 +221,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
             Line::DrawUseBresenham(pp,startPoint,endPoint);
     //        Line::DrawUseDDA(pp,startPoint,endPoint);
             CurrentMode=Editing;
+            CutVertex.clear();
         }
         if(CurrentFigureMode==DrawCircle)   //圆画完触发
         {
@@ -204,6 +229,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
             currentFigure=one_circle;
             Circle::DrawUseMidCircle(pp,startPoint,endPoint);
             CurrentMode=Editing;
+            CutVertex.clear();
         }
         if(CurrentFigureMode==DrawOval)    //椭圆画完触发
         {
@@ -215,6 +241,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *event)
             Ellipse* one_ellipse=new Ellipse(0,cx,cy,rx,ry);
             currentFigure=one_ellipse;
             CurrentMode=Editing;
+            CutVertex.clear();
         }
         if(CurrentFigureMode==DrawPolygon) //多边形尚未画完！多边形画完的触发函数在PressEvent中，曲线同理
         {
@@ -300,6 +327,30 @@ void MainWindow::DrawAllFigures()
         case BSpline:
             Figures[i]->DrawUseBSpline(pp);
             break;
+        }
+    }
+}
+
+void MainWindow::UpdateUI()
+{
+    if(CurrentMode==Drawing){
+        ui->currentMode->setText("绘制模式:");
+        switch(CurrentFigureMode){
+            case DrawLine:ui->currentMode_2->setText("直线");break;
+            case DrawPolygon:ui->currentMode_2->setText("多边形");break;
+            case DrawCircle:ui->currentMode_2->setText("圆形");break;
+            case DrawOval:ui->currentMode_2->setText("椭圆");break;
+            case DrawCurve:ui->currentMode_2->setText("曲线");break;
+            case Clear:ui->currentMode_2->setText("清空");break;
+        }
+    }
+    else if(CurrentMode==Editing){
+        ui->currentMode->setText("编辑模式:");
+        switch(CurrentEditMode){
+            case Move:ui->currentMode_2->setText("平移");break;
+            case Rotate:ui->currentMode_2->setText("旋转");break;
+            case Scale:ui->currentMode_2->setText("缩放");break;
+            case Cut:ui->currentMode_2->setText("剪裁");break;
         }
     }
 }
@@ -439,6 +490,25 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             update();
             continue;
         }
+        else if(instrList.at(0)=="clip"){
+            int id = instrList[1].toInt();
+            int x1 = instrList[2].toInt();
+            int y1 = instrList[3].toInt();
+            int x2 = instrList[4].toInt();
+            int y2 = instrList[5].toInt();
+
+            for(size_t i=0;i<Figures.size();i++){
+                if(Figures[i]->id==id){
+                    if(instrList[6]=="Liang-Barsky")
+                        Figures[i]->CutUseBarsky(x1,y1,x2,y2);
+                    else if(instrList[6]=="Cohen-Sutherland")
+                        Figures[i]->CutUseCohen(x1,y1,x2,y2);
+                    break;
+                }
+            }
+            update();
+            continue;
+        }
         else if(instrList.at(0)=="setColor"){
             int R = instrList[1].toInt();
             int G = instrList[2].toInt();
@@ -567,6 +637,13 @@ void MainWindow::on_actionScale_triggered()
 {
     CurrentMode=Editing;
     CurrentEditMode=Scale;
+    cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
+}
+
+void MainWindow::on_actionClip_triggered()
+{
+    CurrentMode=Editing;
+    CurrentEditMode=Cut;
     cout<<"CurrentEditMode="<<CurrentEditMode<<endl;
 }
 

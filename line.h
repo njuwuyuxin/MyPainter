@@ -22,6 +22,8 @@ public:
     void DrawFigure(QPainter& pp);
     void RotateFigure(QPoint RotateCenter, int angle);
     void ScaleFigure(QPoint ScaleCenter, float mutiple);
+    void CutUseCohen(int x1,int y1,int x2, int y2);
+    void CutUseBarsky(int x1,int y1,int x2, int y2);
     void PrintMyself();
     static void DrawUseBresenham(QPainter& pp,QPoint& begin,QPoint& end);
     static void DrawUseDDA(QPainter& pp,QPoint& begin,QPoint& end);

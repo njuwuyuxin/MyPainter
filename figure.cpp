@@ -21,6 +21,16 @@ void Figure::DrawUseBSpline(QPainter &pp)
     return;
 }
 
+void Figure::CutUseCohen(int x1, int y1, int x2, int y2)
+{
+    return;
+}
+
+void Figure::CutUseBarsky(int x1, int y1, int x2, int y2)
+{
+    return;
+}
+
 int Figure::CalculateDistance(QPoint a, QPoint b)
 {
     return (int)(sqrt(double(pow((a.x() - b.x()),2) + pow((a.y() - b.y()),2))));

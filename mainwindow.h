@@ -61,6 +61,7 @@ private:
     QImage imageMap;
     vector<QPoint> PolygonVertex;     //用于记录当前所画多边形顶点集，每次画新的多边形时会首先清空内部元素
     vector<QPoint> CurveControlPoint; //用于记录绘制曲线的控制点集，每次画新的曲线时会首先清空内部元素
+    vector<QPoint> CutVertex;         //用于记录直线剪裁时两顶点坐标，每次剪裁时会首先清空内部元素
 
     vector<Figure*> Figures;          //存储的图元集（仅命令行程序使用）
     vector<Algorithm> Algorithms;     //存储的图元对应的绘制算法，与图元集一一对应
@@ -71,6 +72,7 @@ private:
 
     void SavePixMap(QString file_name);
     void DrawAllFigures();
+    void UpdateUI();
 
     Mode CurrentMode;                 //表示当前软件所处状态：绘制图元或编辑图元
     FigureMode CurrentFigureMode;     //表示当前按钮点击了某个图形图标，接下来会绘制该图形
@@ -91,5 +93,6 @@ private slots:
     void on_actionMove_triggered();
     void on_actionRotate_triggered();
     void on_actionScale_triggered();
+    void on_actionClip_triggered();
 };
 #endif // MAINWINDOW_H

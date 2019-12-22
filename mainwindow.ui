@@ -13,7 +13,34 @@
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="currentMode">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>0</y>
+      <width>41</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>绘制模式：</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="currentMode_2">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>0</y>
+      <width>31</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>直线</string>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -53,6 +80,7 @@
    <addaction name="actionMove"/>
    <addaction name="actionRotate"/>
    <addaction name="actionScale"/>
+   <addaction name="actionClip"/>
   </widget>
   <action name="actionLoad">
    <property name="text">
@@ -179,6 +207,18 @@
    </property>
    <property name="toolTip">
     <string>平移</string>
+   </property>
+  </action>
+  <action name="actionClip">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/Caijian.png</normaloff>:/Images/Caijian.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clip</string>
+   </property>
+   <property name="toolTip">
+    <string>剪裁</string>
    </property>
   </action>
  </widget>
