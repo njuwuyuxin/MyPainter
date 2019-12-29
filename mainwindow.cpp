@@ -530,7 +530,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
         }
         else if(instrList.at(0)=="resetCanvas")
         {
-            resetPixMap(instrList[1].toInt(),instrList[1].toInt());
+            resetPixMap(instrList[1].toInt(),instrList[2].toInt());
             Figures.clear();
             Algorithms.clear();
             Colors.clear();
