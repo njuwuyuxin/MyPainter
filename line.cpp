@@ -88,7 +88,7 @@ void Line::CutUseCohen(int x1, int y1, int x2, int y2)
             return;
         }
         int x,y;
-        //左右下上的顺序
+        //左右上下的顺序
         if(flag[3]!=0){
             x = x1;
             y = startPoint.y() + 1.0*(endPoint.y() - startPoint.y())*(x1 - startPoint.x()) / (endPoint.x() - startPoint.x());
@@ -97,11 +97,11 @@ void Line::CutUseCohen(int x1, int y1, int x2, int y2)
             x = x2;
             y = startPoint.y() + 1.0*(endPoint.y() - startPoint.y())*(x2 - startPoint.x()) / (endPoint.x() - startPoint.x());
         }
-        else if(flag[1]!=0){
+        else if(flag[0]!=0){
             y = y1;
             x = startPoint.x() + 1.0*(endPoint.x() - startPoint.x())*(y1 - startPoint.y()) / (endPoint.y() - startPoint.y());
         }
-        else if(flag[0]!=0){
+        else if(flag[1]!=0){
             y = y2;
             x = startPoint.x() + 1.0*(endPoint.x() - startPoint.x())*(y2 - startPoint.y()) / (endPoint.y() - startPoint.y());
         }
