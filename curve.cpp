@@ -38,7 +38,8 @@ void Curve::AddControlPoint(QPoint p)
 
 void Curve::DrawFigure(QPainter &pp)
 {
-    DrawUseBezier(pp);
+//    DrawUseBezier(pp);
+    DrawUseBSpline(pp);
 }
 
 void Curve::RotateFigure(QPoint RotateCenter, int angle)
@@ -82,7 +83,24 @@ void Curve::DrawUseBezier(QPainter &pp)
 
 void Curve::DrawUseBSpline(QPainter &pp)
 {
-    DrawUseBezier(pp);
+//    DrawUseBezier(pp);
+    if(ControlPoints.size()<4){     //少于四个控制点没法画
+        ControlPoints.clear();
+        return;
+    }
+    for(size_t i=0;i<=ControlPoints.size()-4;i++){
+        for(double t=0;t<=1;t+=0.001){
+            //计算三次B样条曲线的四个系数
+            double a1 = 1.0/6*pow(1-t,3);
+            double a2 = 1.0/6*(3*t*t*t-6*t*t+4);
+            double a3 = 1.0/6*(1-3*t*t*t+3*t*t+3*t);
+            double a4 = 1.0/6*t*t*t;
+            int x = (int)(ControlPoints[i].x()*a1+ControlPoints[i+1].x()*a2+ControlPoints[i+2].x()*a3+ControlPoints[i+3].x()*a4);
+            int y = (int)(ControlPoints[i].y()*a1+ControlPoints[i+1].y()*a2+ControlPoints[i+2].y()*a3+ControlPoints[i+3].y()*a4);
+            QPoint temp(x,y);
+            pp.drawPoint(temp);
+        }
+    }
 }
 
 void Curve::Move(int x, int y)

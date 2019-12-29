@@ -118,6 +118,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
             else if(CurrentEditMode==Cut){
                 QPoint pos=event->pos();
+//                qDebug()<<pos<<endl;
                 CutVertex.push_back(pos);
                 if(CutVertex.size()==2){
                     currentFigure->CutUseBarsky(CutVertex[0].x(),CutVertex[0].y(),CutVertex[1].x(),CutVertex[1].y());
