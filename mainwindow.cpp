@@ -103,7 +103,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             }
         }
     }
-    else if(CurrentMode==Editing){          //当处于绘制模式时，对鼠标事件的处理
+    else if(CurrentMode==Editing){          //当处于编辑模式时，对鼠标事件的处理
         if(event->buttons()==Qt::LeftButton){
 //            qDebug()<<"Press left button in editing mode"<<endl;
             if(CurrentEditMode==Move){
@@ -121,7 +121,8 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
 //                qDebug()<<pos<<endl;
                 CutVertex.push_back(pos);
                 if(CutVertex.size()==2){
-                    currentFigure->CutUseBarsky(CutVertex[0].x(),CutVertex[0].y(),CutVertex[1].x(),CutVertex[1].y());
+//                    currentFigure->CutUseBarsky(CutVertex[0].x(),CutVertex[0].y(),CutVertex[1].x(),CutVertex[1].y());
+                    currentFigure->CutUseCohen(CutVertex[0].x(),CutVertex[0].y(),CutVertex[1].x(),CutVertex[1].y());
                     tempPixMap=pixMap;
                     QPainter pp(&tempPixMap);
                     pp.setPen(PenColor);

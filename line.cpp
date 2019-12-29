@@ -1,4 +1,6 @@
 #include "line.h"
+#include "bitset"
+using std::bitset;
 
 Line::Line()
 {
@@ -31,9 +33,123 @@ void Line::ScaleFigure(QPoint ScaleCenter, float mutiple)
     Figure::ScalePoint(endPoint,ScaleCenter,mutiple);
 }
 
+//void Line::CutUseCohen(int XWmin, int YWmax, int XWmax, int YWmin)      //x1,y1,x2,y2
 void Line::CutUseCohen(int x1, int y1, int x2, int y2)
 {
-    CutUseBarsky(x1,y1,x2,y2);
+
+    bitset<4> flag1("0000");
+    bitset<4> flag2("0000");
+    if(startPoint.y()<y1)
+        flag1[0]=1;
+    if(startPoint.y()>y2)
+        flag1[1]=1;
+    if(startPoint.x()>x2)
+        flag1[2]=1;
+    if(startPoint.x()<x1)
+        flag1[3]=1;
+
+    if(endPoint.y()<y1)
+        flag2[0]=1;
+    if(endPoint.y()>y2)
+        flag2[1]=1;
+    if(endPoint.x()>x2)
+        flag2[2]=1;
+    if(endPoint.x()<x1)
+        flag2[3]=1;
+//    CutUseBarsky(x1,y1,x2,y2);return;
+    if(flag1.to_string()=="0000"&&flag2.to_string()=="0000"){   //完全在矩形框内，全取
+        qDebug()<<"直线全取"<<endl;
+        return;
+    }
+    while(flag1.to_string()!="0000"||flag2.to_string()!="0000"){
+        if ((flag1 & flag2).to_string()!="0000"){
+            qDebug()<<"直线舍弃"<<endl;
+            startPoint.setX(-1);
+            startPoint.setY(-1);
+            endPoint.setX(-1);
+            endPoint.setY(-1);
+            return;
+        }
+
+        //flag标记 第一位：上 第二位：下 第三位：右 第四位：左
+        cout<<"flag1:"<<(flag1.to_string())<<"  flag2:"<<flag2.to_string()<<endl;
+        bitset<4> flag;
+        if(flag1.to_string()!="0000")
+            flag=flag1;
+        else
+            flag=flag2;
+
+        if(flag1.to_string()==flag2.to_string()&&(flag1&flag2).to_string()!="0000"){    //完全不在框内，全舍
+            qDebug()<<"直线舍弃"<<endl;
+            startPoint.setX(-1);
+            startPoint.setY(-1);
+            endPoint.setX(-1);
+            endPoint.setY(-1);
+            return;
+        }
+        int x,y;
+        //左右下上的顺序
+        if(flag[3]!=0){
+            x = x1;
+            y = startPoint.y() + 1.0*(endPoint.y() - startPoint.y())*(x1 - startPoint.x()) / (endPoint.x() - startPoint.x());
+        }
+        else if(flag[2]!=0){
+            x = x2;
+            y = startPoint.y() + 1.0*(endPoint.y() - startPoint.y())*(x2 - startPoint.x()) / (endPoint.x() - startPoint.x());
+        }
+        else if(flag[1]!=0){
+            y = y1;
+            x = startPoint.x() + 1.0*(endPoint.x() - startPoint.x())*(y1 - startPoint.y()) / (endPoint.y() - startPoint.y());
+        }
+        else if(flag[0]!=0){
+            y = y2;
+            x = startPoint.x() + 1.0*(endPoint.x() - startPoint.x())*(y2 - startPoint.y()) / (endPoint.y() - startPoint.y());
+        }
+
+        if(flag1.to_string()==flag.to_string()){    //当前循环处理的是startPoint
+            startPoint.setX(x);
+            startPoint.setY(y);
+            //重新计算flag
+            if(startPoint.y()<y1)
+                flag1[0]=1;
+            else
+                flag1[0]=0;
+            if(startPoint.y()>y2)
+                flag1[1]=1;
+            else
+                flag1[1]=0;
+            if(startPoint.x()>x2)
+                flag1[2]=1;
+            else
+                flag1[2]=0;
+            if(startPoint.x()<x1)
+                flag1[3]=1;
+            else
+                flag1[3]=0;
+        }
+        else{                                       //当前循环处理的是endPoint
+            endPoint.setX(x);
+            endPoint.setY(y);
+            //重新计算flag
+            if(startPoint.y()<y1)
+                flag2[0]=1;
+            else
+                flag2[0]=0;
+            if(startPoint.y()>y2)
+                flag2[1]=1;
+            else
+                flag2[1]=0;
+            if(startPoint.x()>x2)
+                flag2[2]=1;
+            else
+                flag2[2]=0;
+            if(startPoint.x()<x1)
+                flag2[3]=1;
+            else
+                flag2[3]=0;
+        }
+    }
+
 }
 
 void Line::CutUseBarsky(int x1, int y1, int x2, int y2)
@@ -65,6 +181,10 @@ void Line::CutUseBarsky(int x1, int y1, int x2, int y2)
             if(q[i]<0){
                 /*应当舍弃该直线*/
                 qDebug()<<"直线被舍弃1"<<endl;
+                startPoint.setX(-1);
+                startPoint.setY(-1);
+                endPoint.setX(-1);
+                endPoint.setY(-1);
                 return;
             }
         }
@@ -79,6 +199,10 @@ void Line::CutUseBarsky(int x1, int y1, int x2, int y2)
     }
     if(u1>u2){//裁剪的左侧在右侧的右边，舍弃
         qDebug()<<"直线被舍弃2"<<endl;
+        startPoint.setX(-1);
+        startPoint.setY(-1);
+        endPoint.setX(-1);
+        endPoint.setY(-1);
         return;
     }
     else{
