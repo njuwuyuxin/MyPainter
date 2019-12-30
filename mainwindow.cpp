@@ -572,6 +572,10 @@ void MainWindow::on_actionLoad_triggered()
 
 void MainWindow::on_actionSave_triggered()
 {
+    QString file_path = QFileDialog::getSaveFileName(this,"请选择保存路径");
+    pixMap=tempPixMap;
+    SavePixMap(file_path);
+    update();
     return;
 }
 
