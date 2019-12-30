@@ -48,6 +48,10 @@ void Polygon::PrintMyself()
 
 void Polygon::DrawUseDDA(QPainter &pp)
 {
+    for(size_t i=0;i<Vertex.size();i++){
+        qDebug()<<Vertex[i]<<endl;
+    }
+
     for(size_t i=1;i<Vertex.size();i++){
         Line::DrawUseDDA(pp,Vertex[i-1],Vertex[i]);
     }
