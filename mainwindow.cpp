@@ -65,7 +65,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                     PolygonVertex.push_back(s);
                 }
             }
-            else if(CurrentFigureMode==DrawCurve){
+            else if(CurrentFigureMode==DrawCurve||CurrentFigureMode==DrawCurveBSpline){
                 isDrawing=true;
                 startPoint=event->pos();
                 QPoint s = event->pos();
@@ -93,13 +93,22 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
                 update();
             }
             else if(CurrentFigureMode==DrawCurve){   //点击鼠标右键意味着一条曲线各个控制点已确定，调用绘制函数进行绘制
-                 Curve* oneCurve=new Curve(CurveControlPoint);
+                 Curve* oneCurve=new Curve(CurveControlPoint,CurveType::BezierCurve);
                  currentFigure=oneCurve;
-                 oneCurve->DrawFigure(pp);
+                 oneCurve->DrawUseBezier(pp);
                  CurveControlPoint.clear();
                  CurrentMode=Editing;
                  CutVertex.clear();
                  update();
+            }
+            else if(CurrentFigureMode==DrawCurveBSpline){
+                Curve* oneCurve=new Curve(CurveControlPoint,CurveType::BSplineCurve);
+                currentFigure=oneCurve;
+                oneCurve->DrawUseBSpline(pp);
+                CurveControlPoint.clear();
+                CurrentMode=Editing;
+                CutVertex.clear();
+                update();
             }
         }
     }
@@ -342,7 +351,8 @@ void MainWindow::UpdateUI()
             case DrawPolygon:ui->currentMode_2->setText("多边形");break;
             case DrawCircle:ui->currentMode_2->setText("圆形");break;
             case DrawOval:ui->currentMode_2->setText("椭圆");break;
-            case DrawCurve:ui->currentMode_2->setText("曲线");break;
+            case DrawCurve:ui->currentMode_2->setText("贝塞尔曲线");break;
+            case DrawCurveBSpline:ui->currentMode_2->setText("B样条曲线");break;
             case Clear:ui->currentMode_2->setText("清空");break;
         }
     }
@@ -616,6 +626,15 @@ void MainWindow::on_actionDrawCurve_triggered()
     pixMap=tempPixMap;
     CurrentMode=Drawing;
     CurrentFigureMode=DrawCurve;
+    cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
+}
+
+void MainWindow::on_actionDrawCurveBSpline_triggered()
+{
+    CutVertex.clear();
+    pixMap=tempPixMap;
+    CurrentMode=Drawing;
+    CurrentFigureMode=DrawCurveBSpline;
     cout<<"CurrentFigureMode="<<CurrentFigureMode<<endl;
 }
 

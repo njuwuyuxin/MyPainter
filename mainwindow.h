@@ -23,7 +23,7 @@ namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 enum Mode{Drawing,Editing};
-enum FigureMode{DrawLine,DrawCircle,DrawOval,DrawPolygon,DrawCurve,Clear};
+enum FigureMode{DrawLine,DrawCircle,DrawOval,DrawPolygon,DrawCurve,DrawCurveBSpline,Clear};
 enum EditMode{Move,Scale,Rotate,Cut};
 enum Algorithm{Default,Bresenham,DDA,Bezier,BSpline};
 
@@ -89,6 +89,7 @@ private slots:
     void on_actionDrawCircle_triggered();
     void on_actionDrawOval_triggered();
     void on_actionDrawCurve_triggered();
+    void on_actionDrawCurveBSpline_triggered();
     void on_actionResetPix_triggered();
     void on_actionMove_triggered();
     void on_actionRotate_triggered();

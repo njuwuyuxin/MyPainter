@@ -24,11 +24,12 @@ Curve::Curve(int ID)
     id = ID;
 }
 
-Curve::Curve(const vector<QPoint> &points)
+Curve::Curve(const vector<QPoint> &points, CurveType type)
 {
     for(size_t i=0;i<points.size();i++){
         ControlPoints.push_back(points[i]);
     }
+    curveType=type;
 }
 
 void Curve::AddControlPoint(QPoint p)
@@ -38,8 +39,10 @@ void Curve::AddControlPoint(QPoint p)
 
 void Curve::DrawFigure(QPainter &pp)
 {
-//    DrawUseBezier(pp);
-    DrawUseBSpline(pp);
+    if(curveType==CurveType::BezierCurve)
+        DrawUseBezier(pp);
+    else if(curveType==CurveType::BSplineCurve)
+        DrawUseBSpline(pp);
 }
 
 void Curve::RotateFigure(QPoint RotateCenter, int angle)
@@ -83,7 +86,6 @@ void Curve::DrawUseBezier(QPainter &pp)
 
 void Curve::DrawUseBSpline(QPainter &pp)
 {
-//    DrawUseBezier(pp);
     if(ControlPoints.size()<4){     //少于四个控制点没法画
         ControlPoints.clear();
         return;

@@ -17,9 +17,9 @@
    <widget class="QLabel" name="currentMode">
     <property name="geometry">
      <rect>
-      <x>690</x>
+      <x>610</x>
       <y>0</y>
-      <width>41</width>
+      <width>81</width>
       <height>21</height>
      </rect>
     </property>
@@ -30,9 +30,9 @@
    <widget class="QLabel" name="currentMode_2">
     <property name="geometry">
      <rect>
-      <x>740</x>
+      <x>700</x>
       <y>0</y>
-      <width>31</width>
+      <width>51</width>
       <height>21</height>
      </rect>
     </property>
@@ -76,6 +76,7 @@
    <addaction name="actionDrawCircle"/>
    <addaction name="actionDrawOval"/>
    <addaction name="actionDrawCurve"/>
+   <addaction name="actionDrawCurveBSpline"/>
    <addaction name="actionResetPix"/>
    <addaction name="actionMove"/>
    <addaction name="actionRotate"/>
@@ -219,6 +220,18 @@
    </property>
    <property name="toolTip">
     <string>剪裁</string>
+   </property>
+  </action>
+  <action name="actionDrawCurveBSpline">
+   <property name="icon">
+    <iconset resource="Image.qrc">
+     <normaloff>:/Images/curve.png</normaloff>:/Images/curve.png</iconset>
+   </property>
+   <property name="text">
+    <string>DrawCurveBSpline</string>
+   </property>
+   <property name="toolTip">
+    <string>画B样条曲线</string>
    </property>
   </action>
  </widget>
