@@ -406,7 +406,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             QString instr2 = inputStream.readLine();
             QStringList vertexes = instr2.split(" ");
             Polygon* onePoly = new Polygon(id);
-            for(int i=0;i<vertex_count;i++){
+            for(int i=0;i<vertex_count*2;i+=2){
                 QPoint p(vertexes[i].toInt(),vertexes[i+1].toInt());
                 onePoly->AddVertex(p);
             }
@@ -443,7 +443,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             QString instr2 = inputStream.readLine();
             QStringList points = instr2.split(" ");
             Curve* oneCurve = new Curve(id);
-            for(int i=0;i<point_count;i++){
+            for(int i=0;i<point_count*2;i+=2){
                 QPoint p(points[i].toInt(),points[i+1].toInt());
                 oneCurve->AddControlPoint(p);
             }
@@ -529,7 +529,7 @@ void MainWindow::DrawFromInstruction(QString path,QString dir_path)
             PenColor=c;
         }
         else if(instrList.at(0)=="saveCanvas"){
-            QString save_path = dir_path + instrList.at(1);
+            QString save_path = dir_path + instrList.at(1)+".bmp";
 
             //由于命令行程序需要存储所有图元，并且涉及到图元的编辑，因此只有在保存之前，才会将存储图元统一绘制到一张画布上
             //并且每次绘制之前需要先清空上一张画布内容，根据存储的图元集合重新绘制
